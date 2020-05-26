@@ -1,0 +1,4 @@
+user:md
+password:SdI4720OP
+host:localhost
+database:cine_db
