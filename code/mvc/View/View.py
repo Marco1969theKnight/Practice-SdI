@@ -5,17 +5,17 @@ class View:
     **************************
     """
 
-    def start(self):
+    def start_movie_db(self):
         print('==================================================')
         print('= ¡Bienvenido a nuestra biblioteca de peliculas! =')
         print('==================================================')
 
-    def end(self):
+    def end_movie_db(self):
         print('==================================================')
         print('=    Que tengas un buen dia ¡Hasta la proxima!   =')
         print('==================================================')
 
-    def main_menu(self):
+    def main_menu_movie_db(self):
         print('********************************')
         print('*   --   Menu Principal   --   *')
         print('********************************')
@@ -143,14 +143,14 @@ class View:
         print('Año final de carrera: ', record[4])
 
     def show_directores_header(self, header):
-        print(header.center(54, '*'))
-        print('-'*54)
+        print(header.center(62, '*'))
+        print('-'*62)
 
     def show_directores_midder(self):
-        print('-'*54)
+        print('-'*62)
 
     def show_directores_footer(self):
-        print('*'*54)
+        print('*'*62)
 
 
     """

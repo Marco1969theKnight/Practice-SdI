@@ -13,19 +13,19 @@ class Controller:
         self.view = View()
 
     def start(self):
-        self.view.start()
-        self.main_menu()
+        self.view.start_movie_db()
+        self.main_menu_movie_db()
 
     """
-    ***********************
-    * General controllers *
-    ***********************
+    ********************************
+    * General movie DB controllers *
+    ********************************
     """
 
-    def main_menu(self):
+    def main_menu_movie_db(self):
         o = '100'
         while o != '0':
-            self.view.main_menu()
+            self.view.main_menu_movie_db()
             self.view.option('4')
             o = input()
             if o == '1':
@@ -37,7 +37,7 @@ class Controller:
             elif o == '4':
                 self.peliculas_menu()
             elif o == '0':
-                self.view.end()
+                self.view.end_movie_db()
             else:
                 self.view.not_valid_option()
         return

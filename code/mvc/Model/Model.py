@@ -9,7 +9,8 @@ class Model:
     *******************************************
     """
 
-    def __init__(self, config_db_file='config.txt'):
+    def __init__(self, config_db_file=
+        'C:\\Users\\Public\\Documents\\SistemasDeInformacion\\Practice-SdI\\code\\mvc\\config.txt'):
         self.config_db_file = config_db_file
         self.config_db = self.read_config_db()
         self.connect_to_db()
