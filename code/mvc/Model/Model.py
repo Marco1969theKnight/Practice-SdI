@@ -9,8 +9,7 @@ class Model:
     *******************************************
     """
 
-    def __init__(self, config_db_file=
-        'C:\\Users\\Public\\Documents\\SistemasDeInformacion\\Practice-SdI\\code\\mvc\\config.txt'):
+    def __init__(self, config_db_file='config.txt'):
         self.config_db_file = config_db_file
         self.config_db = self.read_config_db()
         self.connect_to_db()
@@ -29,6 +28,160 @@ class Model:
 
     def close_db(self):
         self.cnx.close()
+
+    """
+    ***************************
+    * A model for a cinema DB *
+    ***************************
+    """
+
+    """
+    *************************
+    * Administrator methods *
+    *************************
+    """
+
+    def create_administrador(self, nombre, apellido_1, apellido_2, correo, telefono, contrasenia):
+        try:
+            sql = 'INSERT INTO  administrador (`nombre`, `apellido_1`, `apellido_2`, `correo`, `telefono`, `contrasenia`) VALUES(%s, %s, %s, %s, %s, %s)'
+            vals = (nombre, apellido_1, apellido_2,
+                    correo, telefono, contrasenia)
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            id_pais = self.cursor.lastrowid
+            return id_pais
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
+
+    def read_a_administrador(self, id_administrador):
+        try:
+            sql = 'SELECT * FROM administrador WHERE id_administrador = %s'
+            vals = (id_administrador,)
+            self.cursor.execute(sql, vals)
+            record = self.cursor.fetchone()
+            return record
+        except connector.Error as err:
+            return err
+
+    def read_administrador_sesion(self, correo, contrasenia):
+        try:
+            sql = 'SELECT * FROM administrador WHERE correo = %s AND contrasenia = %s'
+            vals = (correo, contrasenia)
+            self.cursor.execute(sql, vals)
+            records = self.cursor.fetchone()
+            return records
+        except connector.Error as err:
+            return err
+
+    def read_all_administrador(self):    # Caution if large ammount of data
+        try:
+            sql = 'SELECT * FROM administrador'
+            self.cursor.execute(sql)
+            records = self.cursor.fetchall()
+            return records
+        except connector.Error as err:
+            return err
+
+    def update_administrador(self, fields, vals):
+        try:
+            sql = 'UPDATE administrador SET ' + \
+                ','.join(fields)+' WHERE id_administrador = %s'
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            return True
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
+
+    def delete_administrador(self, id_administrador):
+        try:
+            sql = 'DELETE FROM administrador WHERE id_administrador = %s'
+            vals = (id_administrador,)
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            count = self.cursor.rowcount
+            return count
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
+
+    """
+    ****************
+    * User methods *
+    ****************
+    """
+
+    def create_usuario(self, nombre, apellido, correo, contrasenia):
+        try:
+            sql = 'INSERT INTO  usuario (`nombre`, `apellido`, `correo`, `contrasenia`) VALUES(%s, %s, %s, %s)'
+            vals = (nombre, apellido, correo, contrasenia)
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            id_usuario = self.cursor.lastrowid
+            print(id_usuario)
+            return id_usuario
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
+
+    def read_a_usuario(self, id_usuario):
+        try:
+            sql = 'SELECT * FROM usuario WHERE id_usuario = %s'
+            vals = (id_usuario,)
+            self.cursor.execute(sql, vals)
+            record = self.cursor.fetchone()
+            return record
+        except connector.Error as err:
+            return err
+
+    def read_usuario_sesion(self, correo, contrasenia):
+        try:
+            sql = 'SELECT * FROM usuario WHERE correo = %s AND contrasenia = %s'
+            vals = (correo, contrasenia)
+            self.cursor.execute(sql, vals)
+            records = self.cursor.fetchone()
+            return records
+        except connector.Error as err:
+            return err
+
+    def read_all_usuario(self):    # Caution if large ammount of data
+        try:
+            sql = 'SELECT * FROM usuario'
+            self.cursor.execute(sql)
+            records = self.cursor.fetchall()
+            return records
+        except connector.Error as err:
+            return err
+
+    def update_usuario(self, fields, vals):
+        try:
+            sql = 'UPDATE usuario SET ' + \
+                ','.join(fields)+' WHERE id_usuario = %s'
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            return True
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
+
+    def delete_usuario(self, id_usuario):
+        try:
+            sql = 'DELETE FROM usuario WHERE id_usuario = %s'
+            vals = (id_usuario,)
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            count = self.cursor.rowcount
+            return count
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
+
+    """
+    **************************
+    * A model for a movie DB *
+    **************************
+    """
 
     """
     *******************

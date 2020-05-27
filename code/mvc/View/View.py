@@ -5,6 +5,70 @@ class View:
     **************************
     """
 
+    def start(self):
+        print('=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=')
+        print('=.         ¡Bienvenido a nuestro cine!         .=')
+        print('=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=')
+
+    def end(self):
+        print('=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=')
+        print('=.  Que tengas un buen dia ¡Hasta la proxima!  .=')
+        print('=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=')
+
+    def main_menu(self):
+        print('================================')
+        print('=   --   Menu Principal   --   =')
+        print('================================')
+        print('1. Iniciar sesion usuario')
+        print('2. Crear cuenta usuario')
+        print('3. Iniciar sesion administrador')
+        print('0. Salir')
+
+    def end_sesion(self):
+        print('==================================================')
+        print('=    Que tengas un buen dia ¡Hasta la proxima!   =')
+        print('==================================================')
+
+    """
+    ***********************
+    * Views for user menu *
+    ***********************
+    """
+
+    def main_menu_user(self):
+        print('*****************************************')
+        print('*   --   Menu Principal Usuarios   --   *')
+        print('*****************************************')
+        print('1. Consultar funciones por semana')
+        print('2. Consultar funciones por pelicula')
+        print('3. Ajustes de perfil')
+        print('4. comprar boleto')
+        print('0. Salir')
+
+    """
+    ************************
+    * Views for admin menu *
+    ************************
+    """
+
+    def main_menu_admin(self):
+        print('**********************************************')
+        print('*   --   Menu Principal Administrador   --   *')
+        print('**********************************************')
+        print('1. Peliculas')
+        print('2. Salas')
+        print('3. Horarios')
+        print('4. Asientos')
+        print('5. Funciones')
+        print('6. Administradores')
+        print('0. Salir')
+
+    """
+    *************************
+    * A view for a movie DB *
+    *************************
+    """
+
     def start_movie_db(self):
         print('==================================================')
         print('= ¡Bienvenido a nuestra biblioteca de peliculas! =')
@@ -16,9 +80,9 @@ class View:
         print('==================================================')
 
     def main_menu_movie_db(self):
-        print('********************************')
-        print('*   --   Menu Principal   --   *')
-        print('********************************')
+        print('******************************************')
+        print('*   --   Menu Principal Peliculas   --   *')
+        print('******************************************')
         print('1. Paises')
         print('2. Generos')
         print('3. Directores')
@@ -42,15 +106,20 @@ class View:
         print('+ ¡'+str(id)+' se '+op+' correctamente! +')
         print('+'*(len(str(id))+len(op)+24))
 
+    def iniciar_sesion(self, correo):
+        print('+'*(len(str(correo))+25))
+        print('+ ¡'+str(correo)+' ha iniciado sesion! +')
+        print('+'*(len(str(correo))+25))
+
     def error(self, err):
         print(' ¡Error! '.center(len(err)+4, '-'))
         print('- '+err+' -')
         print('-'*(len(err)+4))
 
     """
-    ************************
+    ***********************
     * Views for countries *
-    ************************
+    ***********************
     """
 
     def pais_menu(self):

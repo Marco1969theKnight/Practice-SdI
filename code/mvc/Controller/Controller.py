@@ -13,8 +13,157 @@ class Controller:
         self.view = View()
 
     def start(self):
-        self.view.start_movie_db()
-        self.main_menu_movie_db()
+        self.view.start()
+        self.main_menu()
+
+    """
+    ******************************
+    * General cinema controllers *
+    ******************************
+    """
+
+    def main_menu(self):
+        o = '100'
+        while o != '0':
+            self.view.main_menu()
+            self.view.option('3')
+            o = input()
+            if o == '1':
+                self.main_menu_users()
+            elif o == '2':
+                self.crear_usario()
+            elif o == '3':
+                self.main_menu_admin()
+            elif o == '0':
+                self.view.end()
+            else:
+                self.view.not_valid_option()
+        return
+
+    def ask_sesion(self):
+        self.view.ask('correo: ')
+        correo = input()
+        self.view.ask('contraseña: ')
+        contrasenia = input()
+        return[correo, contrasenia]
+
+    def update_list(self, fs, vs):
+        fields = []
+        vals = []
+        for f, v in zip(fs, vs):
+            if v != '':
+                fields.append(f+' = %s')
+                vals.append(v)
+        return fields, vals
+
+    """
+    *************************
+    * Controllers for users *
+    *************************
+    """
+
+    def main_menu_users(self):
+        sesion = self.in_sesion_usario()
+        if sesion == True:
+            o = '100'
+            while o != '0':
+                self.view.main_menu_user()
+                self.view.option('3')
+                o = input()
+                if o == '1':
+                    self.view.end_sesion()
+                elif o == '2':
+                    self.view.end_sesion()
+                elif o == '3':
+                    self.view.end_sesion()
+                elif o == '4':
+                    self.view.end_sesion()
+                elif o == '0':
+                    self.view.end_sesion()
+                else:
+                    self.view.not_valid_option()
+        else:
+            self.view.not_valid_option()
+        return
+
+    def ask_usuario(self):
+        self.view.ask('Nombre: ')
+        nombre = input()
+        self.view.ask('Apellido: ')
+        apellido = input()
+        self.view.ask('correo: ')
+        correo = input() 
+        self.view.ask('contraseña: ')
+        contrasenia = input()
+        return [nombre, apellido, correo, contrasenia]
+
+    def crear_usario(self):
+        nombre, apellido, correo, contrasenia = self.ask_usuario()
+        out = self.model.create_usuario(
+            nombre, apellido, correo, contrasenia)
+        print(out)
+        if type(out) == int:
+            self.view.ok(correo, 'ha dado de alta')
+        else:
+            if out.errno == 1062:
+                self.view.error('EL USUARIO ESTA REPETIDO')
+            else:
+                self.view.error('NO SE PUDO DAR DE ALTA EL USUARIO. REVISA')
+        return
+
+    def in_sesion_usario(self):
+        correo, contrasenia = self.ask_sesion()
+        find = self.model.read_usuario_sesion(correo, contrasenia)
+        if type(find) == tuple:
+            self.view.iniciar_sesion(correo)
+            return True
+        else:
+            self.view.error(find)
+            return False
+
+    """
+    **************************
+    * Controllers for admins *
+    **************************
+    """
+
+    def main_menu_admin(self):
+        sesion = self.in_sesion_admin()
+        if sesion == True:
+            o = '100'
+            while o != '0':
+                self.view.main_menu_user()
+                self.view.option('3')
+                o = input()
+                if o == '1':
+                    self.view.end_sesion()
+                elif o == '2':
+                    self.view.end_sesion()
+                elif o == '3':
+                    self.view.end_sesion()
+                elif o == '4':
+                    self.view.end_sesion()
+                elif o == '5':
+                    self.view.end_sesion()
+                elif o == '6':
+                    self.view.end_sesion()
+                elif o == '0':
+                    self.view.end_sesion()
+                else:
+                    self.view.not_valid_option()
+        else:
+            self.view.not_valid_option()
+        return
+
+    def in_sesion_admin(self):
+        correo, contrasenia = self.ask_sesion()
+        find = self.model.read_administrador_sesion(correo, contrasenia)
+        if type(find) == tuple:
+            self.view.iniciar_sesion(correo)
+            return True
+        else:
+            self.view.error(find)
+            return False
 
     """
     ********************************
@@ -41,15 +190,6 @@ class Controller:
             else:
                 self.view.not_valid_option()
         return
-
-    def update_list(self, fs, vs):
-        fields = []
-        vals = []
-        for f, v in zip(fs, vs):
-            if v != '':
-                fields.append(f+' = %s')
-                vals.append(v)
-        return fields, vals
 
     """
     *****************************

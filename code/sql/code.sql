@@ -60,7 +60,7 @@ create table if not exists administrador(
     apellido_1 varchar(50) not null,
     apellido_2 varchar(50) not null,
     correo varchar(50) not null,
-    telefono int,
+    telefono varchar(10),
     contrasenia varchar(50) not null,
 
     primary key(id_administrador)
