@@ -136,7 +136,7 @@ class Controller:
                 self.view.option('3')
                 o = input()
                 if o == '1':
-                    self.view.end_sesion()
+                    self.main_menu_movie_db()
                 elif o == '2':
                     self.view.end_sesion()
                 elif o == '3':
