@@ -39,7 +39,7 @@ class View:
         print('=========================================')
         print('=   --   Menu Principal Usuarios   --   =')
         print('=========================================')
-        print('1. Consultar funciones por semana')
+        print('1. Consultar funciones por dia')
         print('2. Consultar funciones por pelicula')
         print('3. Ajustes de perfil')
         print('4. comprar boleto')
@@ -121,7 +121,7 @@ class View:
         print('0. Regresar')
 
     def show_a_horario(self, record):
-        print(f'{record[0]:<6}|{record[1]:<10}|{record[2]:<8}')
+        print(f'{record[0]:<6}|{str(record[1]):<10}|{str(record[2]):<8}')
 
     def show_horario_header(self, header):
         print(header.center(56, '*'))
@@ -235,14 +235,14 @@ class View:
         print('Tipo: ', record[2])
         print('Capacidad: ', record[3])
         print('Precio: ', record[4])
-        print(f'{record[5]:<6}|{record[6]:<10}|{record[7]:<8}')
-        print('ID Pelicula: ', record[0])
-        print('Titulo: ', record[1])
-        print('Genero: ', record[2])
-        print('Director: '+record[3]+' '+record[4])
-        print('Año: ', record[5])
-        print('Pais: ', record[6])
-        print('Calificacion: ', record[7])
+        print(f'{record[5]:<6}|{str(record[6]):<10}|{str(record[7]):<8}')
+        print('ID Pelicula: ', record[8])
+        print('Titulo: ', record[9])
+        print('Genero: ', record[10])
+        print('Director: '+record[11]+' '+record[12])
+        print('Año: ', record[13])
+        print('Pais: ', record[14])
+        print('Calificacion: ', record[15])
 
     def show_funcion_header(self, header):
         print(header.center(18, '*'))

@@ -376,7 +376,7 @@ class Model:
 
     def read_a_asientos(self, id_asientos):
         try:
-            sql = 'SELECT asientos.* sala.nombre FROM asientos JOIN sala ON asientos.id_sala = sala.id_sala WHERE asientos.id_asientos = %s'
+            sql = 'SELECT asientos.*, sala.nombre FROM asientos JOIN sala ON asientos.id_sala = sala.id_sala WHERE asientos.id_asientos = %s'
             vals = (id_asientos,)
             self.cursor.execute(sql, vals)
             record = self.cursor.fetchone()
@@ -386,7 +386,7 @@ class Model:
 
     def read_asientos_particulares(self, fila, numero):
         try:
-            sql = 'SELECT asientos.* sala.nombre FROM asientos JOIN sala ON asientos.id_sala = sala.id_sala WHERE asientos.fila = %s AND asientos.numero = %s'
+            sql = 'SELECT asientos.*, sala.nombre FROM asientos JOIN sala ON asientos.id_sala = sala.id_sala WHERE asientos.fila = %s AND asientos.numero = %s'
             vals = (fila, numero)
             self.cursor.execute(sql, vals)
             records = self.cursor.fetchall()
@@ -396,7 +396,7 @@ class Model:
 
     def read_all_asientos(self):    # Caution if large ammount of data
         try:
-            sql = 'SELECT asientos.* sala.nombre FROM asientos JOIN sala ON asientos.id_sala = sala.id_sala'
+            sql = 'SELECT asientos.*, sala.nombre FROM asientos JOIN sala ON asientos.id_sala = sala.id_sala'
             self.cursor.execute(sql)
             records = self.cursor.fetchall()
             return records
@@ -405,7 +405,7 @@ class Model:
 
     def read_asientos_sala(self, id_sala):
         try:
-            sql = 'SELECT asientos.* sala.nombre FROM asientos JOIN sala ON asientos.id_sala = sala.id_sala WHERE asientos.id_sala = %s'
+            sql = 'SELECT asientos.*, sala.nombre FROM asientos JOIN sala ON asientos.id_sala = sala.id_sala WHERE asientos.id_sala = %s'
             vals = (id_sala, )
             self.cursor.execute(sql, vals)
             records = self.cursor.fetchall()
@@ -444,7 +444,7 @@ class Model:
 
     def create_funcion(self, id_sala, id_horario, id_pelicula):
         try:
-            sql = 'INSERT INTO  sala (`id_sala`, `id_horario`, `id_pelicula`) VALUES(%s, %s, %s)'
+            sql = 'INSERT INTO  funcion (`id_sala`, `id_horario`, `id_pelicula`) VALUES(%s, %s, %s)'
             vals = (id_sala, id_horario, id_pelicula)
             self.cursor.execute(sql, vals)
             self.cnx.commit()
@@ -456,7 +456,7 @@ class Model:
 
     def read_a_funcion(self, id_sala, id_horario, id_pelicula):
         try:
-            sql = 'SELECT sala.*, horario.*, pelicula.* FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN pelicula ON funcion.id_pelicula = pelicula.id_pelicula WHERE funcion.id_sala = %s AND funcion.id_horario = %s AND funcion.id_pelicula = %s'
+            sql = 'SELECT sala.*, horario.*, peliculas.id_pelicula, peliculas.titulo, genero.nombre, directores.nombre, directores.apellido, peliculas.anio, pais.nombre, peliculas.calif FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN peliculas ON funcion.id_pelicula = peliculas.id_pelicula JOIN genero ON peliculas.id_genero = genero.id_genero JOIN pais ON peliculas.id_pais = pais.id_pais JOIN directores ON peliculas.id_director = directores.id_director WHERE funcion.id_sala = %s AND funcion.id_horario = %s AND funcion.id_pelicula = %s'
             vals = (id_sala, id_horario, id_pelicula)
             self.cursor.execute(sql, vals)
             record = self.cursor.fetchone()
@@ -466,7 +466,7 @@ class Model:
 
     def read_funcion_sala(self, id_sala):
         try:
-            sql = 'SELECT sala.*, horario.*, pelicula.* FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN pelicula ON funcion.id_pelicula = pelicula.id_pelicula WHERE funcion.id_sala = %s'
+            sql = 'SELECT sala.*, horario.*, peliculas.id_pelicula, peliculas.titulo, genero.nombre, directores.nombre, directores.apellido, peliculas.anio, pais.nombre, peliculas.calif FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN peliculas ON funcion.id_pelicula = peliculas.id_pelicula JOIN genero ON peliculas.id_genero = genero.id_genero JOIN pais ON peliculas.id_pais = pais.id_pais JOIN directores ON peliculas.id_director = directores.id_director WHERE funcion.id_sala = %s'
             vals = (id_sala,)
             self.cursor.execute(sql, vals)
             records = self.cursor.fetchall()
@@ -476,7 +476,7 @@ class Model:
 
     def read_funcion_horario(self, id_horario):
         try:
-            sql = 'SELECT sala.*, horario.*, pelicula.* FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN pelicula ON funcion.id_pelicula = pelicula.id_pelicula WHERE funcion.id_horario = %s'
+            sql = 'SELECT sala.*, horario.*, peliculas.id_pelicula, peliculas.titulo, genero.nombre, directores.nombre, directores.apellido, peliculas.anio, pais.nombre, peliculas.calif FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN peliculas ON funcion.id_pelicula = peliculas.id_pelicula JOIN genero ON peliculas.id_genero = genero.id_genero JOIN pais ON peliculas.id_pais = pais.id_pais JOIN directores ON peliculas.id_director = directores.id_director WHERE funcion.id_horario = %s'
             vals = (id_horario,)
             self.cursor.execute(sql, vals)
             records = self.cursor.fetchall()
@@ -486,7 +486,7 @@ class Model:
 
     def read_funcion_pelicula(self, id_pelicula):
         try:
-            sql = 'SELECT sala.*, horario.*, pelicula.* FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN pelicula ON funcion.id_pelicula = pelicula.id_pelicula WHERE funcion.id_pelicula = %s'
+            sql = 'SELECT sala.*, horario.*, peliculas.id_pelicula, peliculas.titulo, genero.nombre, directores.nombre, directores.apellido, peliculas.anio, pais.nombre, peliculas.calif FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN peliculas ON funcion.id_pelicula = peliculas.id_pelicula JOIN genero ON peliculas.id_genero = genero.id_genero JOIN pais ON peliculas.id_pais = pais.id_pais JOIN directores ON peliculas.id_director = directores.id_director WHERE funcion.id_pelicula = %s'
             vals = (id_pelicula,)
             self.cursor.execute(sql, vals)
             records = self.cursor.fetchall()
@@ -496,7 +496,7 @@ class Model:
 
     def read_all_funcion(self):    # Caution if large ammount of data
         try:
-            sql = 'SELECT sala.*, horario.*, pelicula.* FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN pelicula ON funcion.id_pelicula = pelicula.id_pelicula'
+            sql = 'SELECT sala.*, horario.*, peliculas.id_pelicula, peliculas.titulo, genero.nombre, directores.nombre, directores.apellido, peliculas.anio, pais.nombre, peliculas.calif FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN peliculas ON funcion.id_pelicula = peliculas.id_pelicula JOIN genero ON peliculas.id_genero = genero.id_genero JOIN pais ON peliculas.id_pais = pais.id_pais JOIN directores ON peliculas.id_director = directores.id_director'
             self.cursor.execute(sql)
             records = self.cursor.fetchall()
             return records

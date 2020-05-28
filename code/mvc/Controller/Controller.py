@@ -232,7 +232,7 @@ class Controller:
             self.view.show_administrador_header(' Todos los Administradores ')
             for administrador in administradores:
                 self.view.show_a_administrador(administrador)
-            self.view.show_administrador_midder()
+                self.view.show_administrador_midder()
             self.view.show_administrador_footer()
         else:
             self.view.error('PROBLEMA AL LEER LOS ADMINISTRADORES. REVISA')
@@ -266,7 +266,7 @@ class Controller:
             for administrador in administradores:
                 self.view.show_a_administrador(administrador)
                 self.view.show_administrador_midder()
-                self.view.show_administrador_footer()
+            self.view.show_administrador_footer()
         else:
             self.view.error('PROBLEMA AL LEER LOS ADMINISTRADORES. REVISA')
         return
@@ -363,7 +363,7 @@ class Controller:
             elif o == '6':
                 self.update_horario()
             elif o == '7':
-                self.delete_pais()
+                self.delete_horario()
             elif o == '0':
                 return
             else:
@@ -381,7 +381,7 @@ class Controller:
         fecha, hora_inicio = self.ask_horario()
         out = self.model.create_horario(fecha, hora_inicio)
         if type(out) == int:
-            self.view.ok(fecha+'a las'+hora_inicio, 'agrego')
+            self.view.ok(fecha+'va las '+hora_inicio, 'agrego')
         else:
             if out.errno == 1062:
                 self.view.error('EL HORARIO ESTA REPETIDO')
@@ -411,7 +411,7 @@ class Controller:
             self.view.show_horario_header(' Todos los Horarios ')
             for horario in horarios:
                 self.view.show_a_horario(horario)
-            self.view.show_horario_midder()
+                self.view.show_horario_midder()
             self.view.show_horario_footer()
         else:
             self.view.error('PROBLEMA AL LEER LOS HORARIOS. REVISA')
@@ -432,12 +432,12 @@ class Controller:
     def read_horario_fecha(self):
         self.view.ask('Fecha: ')
         fecha = input()
-        horarios = self.model.read_horario_particular(fecha)
+        horarios = self.model.read_horario_fecha(fecha)
         if type(horarios) == list:
             self.view.show_horario_header(' Horarios con la fecha '+fecha+' ')
             for horario in horarios:
                 self.view.show_a_horario(horario)
-            self.view.show_horario_midder()
+                self.view.show_horario_midder()
             self.view.show_horario_footer()
         else:
             self.view.error('PROBLEMA AL LEER LOS HORARIOS. REVISA')
@@ -566,7 +566,7 @@ class Controller:
             self.view.show_sala_header(' Todas las Salas ')
             for sala in salas:
                 self.view.show_a_sala(sala)
-            self.view.show_sala_midder()
+                self.view.show_sala_midder()
             self.view.show_sala_footer()
         else:
             self.view.error('PROBLEMA AL LEER LAS SALAS. REVISA')
@@ -580,7 +580,7 @@ class Controller:
             self.view.show_sala_header(' Salas con el nombre '+nombre+' ')
             for sala in salas:
                 self.view.show_a_sala(sala)
-            self.view.show_sala_midder()
+                self.view.show_sala_midder()
             self.view.show_sala_footer()
         else:
             self.view.error('PROBLEMA AL LEER LAS SALAS. REVISA')
@@ -594,7 +594,7 @@ class Controller:
             self.view.show_sala_header(' Salas del tipo '+tipo+' ')
             for sala in salas:
                 self.view.show_a_sala(sala)
-            self.view.show_sala_midder()
+                self.view.show_sala_midder()
             self.view.show_sala_footer()
         else:
             self.view.error('PROBLEMA AL LEER LOS HORARIOS. REVISA')
@@ -663,19 +663,19 @@ class Controller:
             self.view.option('7')
             o = input()
             if o == '1':
-                self.create_horario()
+                self.create_asientos()
             elif o == '2':
-                self.read_a_horario()
+                self.read_a_asientos()
             elif o == '3':
-                self.read_all_horario()
+                self.read_all_asientos()
             elif o == '4':
-                self.read_horario_particular()
+                self.read_asientos_particulares()
             elif o == '5':
-                self.read_horario_fecha()
+                self.read_asientos_sala()
             elif o == '6':
-                self.update_horario()
+                self.update_asientos()
             elif o == '7':
-                self.delete_pais()
+                self.delete_asientos()
             elif o == '0':
                 return
             else:
@@ -723,11 +723,12 @@ class Controller:
 
     def read_all_asientos(self):
         asientos = self.model.read_all_asientos()
+        print(asientos)
         if type(asientos) == list:
             self.view.show_asientos_header(' Todos los Asientos ')
             for asiento in asientos:
                 self.view.show_a_asientos(asiento)
-            self.view.show_asientos_midder()
+                self.view.show_asientos_midder()
             self.view.show_asientos_footer()
         else:
             self.view.error('PROBLEMA AL LEER LOS ASIENTOS. REVISA')
@@ -741,11 +742,11 @@ class Controller:
         asientos = self.model.read_asientos_particulares(
             fila, numero)
         if type(asientos) == list:
-            self.view.show_horario_header(
+            self.view.show_asientos_header(
                 ' Asientos con la fila '+fila+' y numero '+numero+' ')
             for asiento in asientos:
                 self.view.show_a_asientos(asiento)
-            self.view.show_asientos_midder()
+                self.view.show_asientos_midder()
             self.view.show_asientos_footer()
         else:
             self.view.error('PROBLEMA AL LEER LOS ASIENTOS. REVISA')
@@ -759,7 +760,7 @@ class Controller:
             self.view.show_asientos_header(' Asientos de la sala '+id_sala+' ')
             for asiento in asientos:
                 self.view.show_a_asientos(asiento)
-            self.view.show_asientos_midder()
+                self.view.show_asientos_midder()
             self.view.show_asientos_footer()
         else:
             self.view.error('PROBLEMA AL LEER LOS ASIENTOS. REVISA')
@@ -897,7 +898,7 @@ class Controller:
             self.view.show_funcion_header(' Todas las Funciones ')
             for funcion in funciones:
                 self.view.show_a_funcion(funcion)
-            self.view.show_funcion_midder()
+                self.view.show_funcion_midder()
             self.view.show_funcion_footer()
         else:
             self.view.error('PROBLEMA AL LEER LAS FUNCIONES. REVISA')
@@ -911,7 +912,7 @@ class Controller:
             self.view.show_funcion_header(' Funciones de la peilicula '+id_pelicula+' ')
             for funcion in funciones:
                 self.view.show_a_funcion(funcion)
-            self.view.show_funcion_midder()
+                self.view.show_funcion_midder()
             self.view.show_funcion_footer()
         else:
             self.view.error('PROBLEMA AL LEER LAS FUNCIONES. REVISA')
@@ -925,7 +926,7 @@ class Controller:
             self.view.show_funcion_header(' Funciones del horario '+id_horario+' ')
             for funcion in funciones:
                 self.view.show_a_funcion(funcion)
-            self.view.show_funcion_midder()
+                self.view.show_funcion_midder()
             self.view.show_funcion_footer()
         else:
             self.view.error('PROBLEMA AL LEER LAS FUNCIONES. REVISA')
@@ -939,7 +940,7 @@ class Controller:
             self.view.show_funcion_header(' Funciones de la sala '+id_sala+' ')
             for funcion in funciones:
                 self.view.show_a_funcion(funcion)
-            self.view.show_funcion_midder()
+                self.view.show_funcion_midder()
             self.view.show_funcion_footer()
         else:
             self.view.error('PROBLEMA AL LEER LAS FUNCIONES. REVISA')
@@ -1048,7 +1049,7 @@ class Controller:
             self.view.show_pais_header(' Todos los Paises ')
             for pais in paises:
                 self.view.show_a_pais(pais)
-            self.view.show_pais_midder()
+                self.view.show_pais_midder()
             self.view.show_pais_footer()
         else:
             self.view.error('PROBLEMA AL LEER LOS PAISES. REVISA')
@@ -1062,7 +1063,7 @@ class Controller:
             self.view.show_pais_header(' Paises con el nombre de '+nombre+' ')
             for pais in paises:
                 self.view.show_a_pais(pais)
-            self.view.show_pais_midder()
+                self.view.show_pais_midder()
             self.view.show_pais_footer()
         else:
             self.view.error('PROBLEMA AL LEER LOS PAISES. REVISA')
@@ -1184,7 +1185,7 @@ class Controller:
             self.view.show_genero_header(' Todos los Generos ')
             for genero in generos:
                 self.view.show_a_genero(genero)
-            self.view.show_genero_midder()
+                self.view.show_genero_midder()
             self.view.show_genero_footer()
         else:
             self.view.error('PROBLEMA AL LEER LOS GENEROS. REVISA')
@@ -1199,7 +1200,7 @@ class Controller:
                 ' Generos con el nombre de '+nombre+' ')
             for genero in generos:
                 self.view.show_a_genero(genero)
-            self.view.show_genero_midder()
+                self.view.show_genero_midder()
             self.view.show_genero_footer()
         else:
             self.view.error('PROBLEMA AL LEER LOS GENEROS. REVISA')
@@ -1214,7 +1215,7 @@ class Controller:
                 ' Generos con el subgenero de '+subgenero+' ')
             for genero in generos:
                 self.view.show_a_genero(genero)
-            self.view.show_genero_midder()
+                self.view.show_genero_midder()
             self.view.show_genero_footer()
         else:
             self.view.error('PROBLEMA AL LEER LOS GENEROS. REVISA')
