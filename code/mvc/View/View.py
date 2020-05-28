@@ -16,9 +16,9 @@ class View:
         print('=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=')
 
     def main_menu(self):
-        print('================================')
-        print('=   --   Menu Principal   --   =')
-        print('================================')
+        print('=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.')
+        print('=.   --    Menu Principal   --    .=')
+        print('=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.=.')
         print('1. Iniciar sesion usuario')
         print('2. Crear cuenta usuario')
         print('3. Iniciar sesion administrador')
@@ -36,9 +36,9 @@ class View:
     """
 
     def main_menu_user(self):
-        print('*****************************************')
-        print('*   --   Menu Principal Usuarios   --   *')
-        print('*****************************************')
+        print('=========================================')
+        print('=   --   Menu Principal Usuarios   --   =')
+        print('=========================================')
         print('1. Consultar funciones por semana')
         print('2. Consultar funciones por pelicula')
         print('3. Ajustes de perfil')
@@ -52,9 +52,9 @@ class View:
     """
 
     def main_menu_admin(self):
-        print('**********************************************')
-        print('*   --   Menu Principal Administrador   --   *')
-        print('**********************************************')
+        print('==============================================')
+        print('=   --   Menu Principal Administrador   --   =')
+        print('==============================================')
         print('1. Peliculas')
         print('2. Salas')
         print('3. Horarios')
@@ -62,6 +62,197 @@ class View:
         print('5. Funciones')
         print('6. Administradores')
         print('0. Salir')
+
+    """
+    *******************
+    * Views for admin *
+    *******************
+    """
+
+    def administrador_menu(self):
+        print('*************************************************')
+        print('*     --     Submenu Administradores     --     *')
+        print('*************************************************')
+        print('1. Crear administrador')
+        print('2. Ver administrador')
+        print('3. Ver todos los administradores')
+        print('4. Ver administrador por correo')
+        print('5. Ver administrador por nombre completo')
+        print('6. Actualizar administrador')
+        print('7. Eliminar administrador')
+        print('0. Salir')
+
+    def show_a_administrador(self, record):
+        print('ID: ', record[0])
+        print('Nombre: ', record[1])
+        print('Primer apellido: ', record[2])
+        print('Segundo apellido: '+record[3])
+        print('Correo: ', record[4])
+        print('Telefono: ', record[5])
+        print('Contrasenia: ', record[6])
+
+    def show_administrador_header(self, header):
+        print(header.center(70, '*'))
+        print('-'*70)
+
+    def show_administrador_midder(self):
+        print('-'*70)
+
+    def show_administrador_footer(self):
+        print('*'*70)
+
+    """
+    **********************
+    * Views for Schedule *
+    **********************
+    """
+
+    def horario_menu(self):
+        print('**********************************')
+        print('*   --   Submenu Horarios   --   *')
+        print('**********************************')
+        print('1. Agregar horario')
+        print('2. Mostrar horario')
+        print('3. Mostrar todos los horarios')
+        print('4. Mostrar horario por fecha y hora de inicio')
+        print('5. Mostrar horario por fecha')
+        print('6. Actualizar horario')
+        print('7. Eliminar horario')
+        print('0. Regresar')
+
+    def show_a_horario(self, record):
+        print(f'{record[0]:<6}|{record[1]:<10}|{record[2]:<8}')
+
+    def show_horario_header(self, header):
+        print(header.center(56, '*'))
+        print('ID horario'.ljust(6)+'|'+'fecha'.ljust(10)+'|'+'hora de inicio'.ljust(8))
+        print('-'*56)
+
+    def show_horario_midder(self):
+        print('-'*56)
+
+    def show_horario_footer(self):
+        print('*'*56)
+
+    """
+    ********************
+    * Views for Saloon *
+    ********************
+    """
+
+    def sala_menu(self):
+        print('******************************')
+        print('*   --   Submenu Sala   --   *')
+        print('******************************')
+        print('1. Agregar sala')
+        print('2. Mostrar sala')
+        print('3. Mostrar todas las salas')
+        print('4. Mostrar sala por nombre')
+        print('5. Mostrar sala por tipo')
+        print('6. Actualizar sala')
+        print('7. Eliminar sala')
+        print('0. Regresar')
+
+    def show_a_sala(self, record):
+        print('ID: ', record[0])
+        print('Nombre: ', record[1])
+        print('Tipo: ', record[2])
+        print('Capacidad: ', record[3])
+        print('Precio: ', record[4])
+
+    def show_sala_header(self, header):
+        print(header.center(29, '*'))
+        print('-'*29)
+
+    def show_sala_midder(self):
+        print('-'*29)
+
+    def show_sala_footer(self):
+        print('*'*29)
+
+    """
+    ******************
+    * Views for Seat *
+    ******************
+    """
+
+    def asientos_menu(self):
+        print('**********************************')
+        print('*   --   Submenu Asientos   --   *')
+        print('**********************************')
+        print('1. Agregar asiento')
+        print('2. Mostrar asiento')
+        print('3. Mostrar todos los asiento')
+        print('4. Mostrar asientos por fila y numero')
+        print('5. Mostrar asientos por sala')
+        print('6. Actualizar asiento')
+        print('7. Eliminar asiento')
+        print('0. Regresar')
+
+    def show_a_asientos(self, record):
+        print('ID: ', record[0])
+        print('Fila: ', record[1])
+        print('Numero: ', record[2])
+        print('Ocupado: ', record[3])
+        print('ID sala: ', record[4])
+        print('Sala: ', record[5])
+
+    def show_asientos_header(self, header):
+        print(header.center(18, '*'))
+        print('-'*18)
+
+    def show_asientos_midder(self):
+        print('-'*18)
+
+    def show_asientos_footer(self):
+        print('*'*18)
+
+    """
+    *****************************
+    * Views for Cinema function *
+    *****************************
+    """
+
+    def funcion_menu(self):
+        print('***********************************')
+        print('*   --   Submenu Funciones   --   *')
+        print('***********************************')
+        print('1. Ver lista peliculas')
+        print('2. Ver lista horarios')
+        print('3. Ver lista salas')
+        print('4. Agregar funcion')
+        print('5. Mostrar funcion')
+        print('6. Mostrar todas las funciones')
+        print('7. Mostrar funciones por pelicula')
+        print('8. Mostrar funciones por horarios')
+        print('9. Mostrar funciones por salas')
+        print('10. Eliminar funcion')
+        print('0. Regresar')
+
+    def show_a_funcion(self, record):
+        print('ID Sala: ', record[0])
+        print('Nombre: ', record[1])
+        print('Tipo: ', record[2])
+        print('Capacidad: ', record[3])
+        print('Precio: ', record[4])
+        print(f'{record[5]:<6}|{record[6]:<10}|{record[7]:<8}')
+        print('ID Pelicula: ', record[0])
+        print('Titulo: ', record[1])
+        print('Genero: ', record[2])
+        print('Director: '+record[3]+' '+record[4])
+        print('Año: ', record[5])
+        print('Pais: ', record[6])
+        print('Calificacion: ', record[7])
+
+    def show_funcion_header(self, header):
+        print(header.center(18, '*'))
+        print('-'*113)
+
+    def show_funcion_midder(self):
+        print('-'*113)
+
+    def show_funcion_footer(self):
+        print('*'*113)
 
     """
     *************************
@@ -110,6 +301,11 @@ class View:
         print('+'*(len(str(correo))+25))
         print('+ ¡'+str(correo)+' ha iniciado sesion! +')
         print('+'*(len(str(correo))+25))
+
+    def error_sesion(self, err):
+        print(' ¡Error al iniciar sesion! '.center(len(err)+4, '-'))
+        print('- '+err+' -')
+        print('-'*(len(err)+4))
 
     def error(self, err):
         print(' ¡Error! '.center(len(err)+4, '-'))

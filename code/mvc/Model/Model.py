@@ -74,6 +74,26 @@ class Model:
         except connector.Error as err:
             return err
 
+    def read_administrador_correo(self, correo):
+        try:
+            sql = 'SELECT * FROM administrador WHERE correo = %s'
+            vals = (correo, )
+            self.cursor.execute(sql, vals)
+            records = self.cursor.fetchone()
+            return records
+        except connector.Error as err:
+            return err
+
+    def read_administrador_nombre_completo(self, nombre, apellido_1, apellido_2):
+        try:
+            sql = 'SELECT * FROM administrador WHERE nombre = %s AND apellido_1 = %s AND apellido_2 = %s'
+            vals = (nombre, apellido_1, apellido_2)
+            self.cursor.execute(sql, vals)
+            records = self.cursor.fetchone()
+            return records
+        except connector.Error as err:
+            return err
+
     def read_all_administrador(self):    # Caution if large ammount of data
         try:
             sql = 'SELECT * FROM administrador'
@@ -119,7 +139,6 @@ class Model:
             self.cursor.execute(sql, vals)
             self.cnx.commit()
             id_usuario = self.cursor.lastrowid
-            print(id_usuario)
             return id_usuario
         except connector.Error as err:
             self.cnx.rollback()
@@ -169,6 +188,325 @@ class Model:
         try:
             sql = 'DELETE FROM usuario WHERE id_usuario = %s'
             vals = (id_usuario,)
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            count = self.cursor.rowcount
+            return count
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
+
+    """
+    ********************
+    * Schedule methods *
+    ********************
+    """
+
+    def create_horario(self, fecha, hora_inicio):
+        try:
+            sql = 'INSERT INTO  horario (`fecha`, `hora_inicio`) VALUES(%s, %s)'
+            vals = (fecha, hora_inicio)
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            id_horario = self.cursor.lastrowid
+            return id_horario
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
+
+    def read_a_horario(self, id_horario):
+        try:
+            sql = 'SELECT * FROM horario WHERE id_horario = %s'
+            vals = (id_horario,)
+            self.cursor.execute(sql, vals)
+            record = self.cursor.fetchone()
+            return record
+        except connector.Error as err:
+            return err
+
+    def read_horario_particular(self, fecha, hora_inicio):
+        try:
+            sql = 'SELECT * FROM horario WHERE fecha = %s AND hora_inicio = %s'
+            vals = (fecha, hora_inicio)
+            self.cursor.execute(sql, vals)
+            records = self.cursor.fetchone()
+            return records
+        except connector.Error as err:
+            return err
+
+    def read_all_horario(self):    # Caution if large ammount of data
+        try:
+            sql = 'SELECT * FROM horario'
+            self.cursor.execute(sql)
+            records = self.cursor.fetchall()
+            return records
+        except connector.Error as err:
+            return err
+
+    def read_horario_fecha(self, fecha):
+        try:
+            sql = 'SELECT * FROM horario WHERE fecha = %s'
+            vals = (fecha, )
+            self.cursor.execute(sql, vals)
+            records = self.cursor.fetchall()
+            return records
+        except connector.Error as err:
+            return err
+
+    def update_horario(self, fields, vals):
+        try:
+            sql = 'UPDATE horario SET ' + \
+                ','.join(fields)+' WHERE id_horario = %s'
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            return True
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
+
+    def delete_horario(self, id_horario):
+        try:
+            sql = 'DELETE FROM horario WHERE id_horario = %s'
+            vals = (id_horario,)
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            count = self.cursor.rowcount
+            return count
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
+
+    """
+    ******************
+    * Saloon methods *
+    ******************
+    """
+
+    def create_sala(self, nombre, tipo, capacidad, precio):
+        try:
+            sql = 'INSERT INTO  sala (`nombre`, `tipo`, `capacidad`, `precio`) VALUES(%s, %s, %s, %s)'
+            vals = (nombre, tipo, capacidad, precio)
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            id_sala = self.cursor.lastrowid
+            return id_sala
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
+
+    def read_a_sala(self, id_sala):
+        try:
+            sql = 'SELECT * FROM sala WHERE id_sala = %s'
+            vals = (id_sala,)
+            self.cursor.execute(sql, vals)
+            record = self.cursor.fetchone()
+            return record
+        except connector.Error as err:
+            return err
+
+    def read_sala_nombre(self, nombre):
+        try:
+            sql = 'SELECT * FROM sala WHERE nombre = %s'
+            vals = (nombre,)
+            self.cursor.execute(sql, vals)
+            records = self.cursor.fetchall()
+            return records
+        except connector.Error as err:
+            return err
+
+    def read_all_sala(self):    # Caution if large ammount of data
+        try:
+            sql = 'SELECT * FROM sala'
+            self.cursor.execute(sql)
+            records = self.cursor.fetchall()
+            return records
+        except connector.Error as err:
+            return err
+
+    def read_sala_tipo(self, tipo):
+        try:
+            sql = 'SELECT * FROM sala WHERE tipo = %s'
+            vals = (tipo, )
+            self.cursor.execute(sql, vals)
+            records = self.cursor.fetchall()
+            return records
+        except connector.Error as err:
+            return err
+
+    def update_sala(self, fields, vals):
+        try:
+            sql = 'UPDATE sala SET ' + \
+                ','.join(fields)+' WHERE id_sala = %s'
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            return True
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
+
+    def delete_sala(self, id_sala):
+        try:
+            sql = 'DELETE FROM sala WHERE id_sala = %s'
+            vals = (id_sala,)
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            count = self.cursor.rowcount
+            return count
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
+
+    """
+    ****************
+    * Seat methods *
+    ****************
+    """
+
+    def create_asientos(self, fila, numero, ocupado, id_sala):
+        try:
+            sql = 'INSERT INTO  asientos (`fila`, `numero`, `ocupado`, `id_sala`) VALUES(%s, %s, %s, %s)'
+            vals = (fila, numero, ocupado, id_sala)
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            id_asientos = self.cursor.lastrowid
+            return id_asientos
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
+
+    def read_a_asientos(self, id_asientos):
+        try:
+            sql = 'SELECT asientos.* sala.nombre FROM asientos JOIN sala ON asientos.id_sala = sala.id_sala WHERE asientos.id_asientos = %s'
+            vals = (id_asientos,)
+            self.cursor.execute(sql, vals)
+            record = self.cursor.fetchone()
+            return record
+        except connector.Error as err:
+            return err
+
+    def read_asientos_particulares(self, fila, numero):
+        try:
+            sql = 'SELECT asientos.* sala.nombre FROM asientos JOIN sala ON asientos.id_sala = sala.id_sala WHERE asientos.fila = %s AND asientos.numero = %s'
+            vals = (fila, numero)
+            self.cursor.execute(sql, vals)
+            records = self.cursor.fetchall()
+            return records
+        except connector.Error as err:
+            return err
+
+    def read_all_asientos(self):    # Caution if large ammount of data
+        try:
+            sql = 'SELECT asientos.* sala.nombre FROM asientos JOIN sala ON asientos.id_sala = sala.id_sala'
+            self.cursor.execute(sql)
+            records = self.cursor.fetchall()
+            return records
+        except connector.Error as err:
+            return err
+
+    def read_asientos_sala(self, id_sala):
+        try:
+            sql = 'SELECT asientos.* sala.nombre FROM asientos JOIN sala ON asientos.id_sala = sala.id_sala WHERE asientos.id_sala = %s'
+            vals = (id_sala, )
+            self.cursor.execute(sql, vals)
+            records = self.cursor.fetchall()
+            return records
+        except connector.Error as err:
+            return err
+
+    def update_asientos(self, fields, vals):
+        try:
+            sql = 'UPDATE asientos SET ' + \
+                ','.join(fields)+' WHERE id_asientos = %s'
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            return True
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
+
+    def delete_asientos(self, id_asientos):
+        try:
+            sql = 'DELETE FROM asientos WHERE id_asientos = %s'
+            vals = (id_asientos,)
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            count = self.cursor.rowcount
+            return count
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
+
+    """
+    ***************************
+    * cinema function methods *
+    ***************************
+    """
+
+    def create_funcion(self, id_sala, id_horario, id_pelicula):
+        try:
+            sql = 'INSERT INTO  sala (`id_sala`, `id_horario`, `id_pelicula`) VALUES(%s, %s, %s)'
+            vals = (id_sala, id_horario, id_pelicula)
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            id_sala = self.cursor.lastrowid
+            return id_sala
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
+
+    def read_a_funcion(self, id_sala, id_horario, id_pelicula):
+        try:
+            sql = 'SELECT sala.*, horario.*, pelicula.* FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN pelicula ON funcion.id_pelicula = pelicula.id_pelicula WHERE funcion.id_sala = %s AND funcion.id_horario = %s AND funcion.id_pelicula = %s'
+            vals = (id_sala, id_horario, id_pelicula)
+            self.cursor.execute(sql, vals)
+            record = self.cursor.fetchone()
+            return record
+        except connector.Error as err:
+            return err
+
+    def read_funcion_sala(self, id_sala):
+        try:
+            sql = 'SELECT sala.*, horario.*, pelicula.* FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN pelicula ON funcion.id_pelicula = pelicula.id_pelicula WHERE funcion.id_sala = %s'
+            vals = (id_sala,)
+            self.cursor.execute(sql, vals)
+            records = self.cursor.fetchall()
+            return records
+        except connector.Error as err:
+            return err
+
+    def read_funcion_horario(self, id_horario):
+        try:
+            sql = 'SELECT sala.*, horario.*, pelicula.* FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN pelicula ON funcion.id_pelicula = pelicula.id_pelicula WHERE funcion.id_horario = %s'
+            vals = (id_horario,)
+            self.cursor.execute(sql, vals)
+            records = self.cursor.fetchall()
+            return records
+        except connector.Error as err:
+            return err
+
+    def read_funcion_pelicula(self, id_pelicula):
+        try:
+            sql = 'SELECT sala.*, horario.*, pelicula.* FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN pelicula ON funcion.id_pelicula = pelicula.id_pelicula WHERE funcion.id_pelicula = %s'
+            vals = (id_pelicula,)
+            self.cursor.execute(sql, vals)
+            records = self.cursor.fetchall()
+            return records
+        except connector.Error as err:
+            return err
+
+    def read_all_funcion(self):    # Caution if large ammount of data
+        try:
+            sql = 'SELECT sala.*, horario.*, pelicula.* FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN pelicula ON funcion.id_pelicula = pelicula.id_pelicula'
+            self.cursor.execute(sql)
+            records = self.cursor.fetchall()
+            return records
+        except connector.Error as err:
+            return err
+
+    def delete_funcion(self, id_sala, id_horario, id_pelicula):
+        try:
+            sql = 'DELETE FROM funcion WHERE id_sala = %s AND id_horario = %s AND id_pelicula = %s'
+            vals = (id_sala, id_horario, id_pelicula)
             self.cursor.execute(sql, vals)
             self.cnx.commit()
             count = self.cursor.rowcount

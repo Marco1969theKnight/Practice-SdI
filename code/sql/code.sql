@@ -105,7 +105,7 @@ create table if not exists asientos(
 
     primary key(id_asientos),
 
-    CONSTRAINT UC_asiento UNIQUE (fila ,numero),
+    CONSTRAINT UC_asiento UNIQUE (fila ,numero, id_sala),
 
     constraint fk_sala foreign key(id_sala)
 		references sala(id_sala)

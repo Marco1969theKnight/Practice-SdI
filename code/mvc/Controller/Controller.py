@@ -64,7 +64,7 @@ class Controller:
 
     def main_menu_users(self):
         sesion = self.in_sesion_usario()
-        if sesion == True:
+        if type(sesion) == tuple:
             o = '100'
             while o != '0':
                 self.view.main_menu_user()
@@ -83,7 +83,7 @@ class Controller:
                 else:
                     self.view.not_valid_option()
         else:
-            self.view.not_valid_option()
+            self.view.error_sesion(sesion)
         return
 
     def ask_usuario(self):
@@ -116,10 +116,10 @@ class Controller:
         find = self.model.read_usuario_sesion(correo, contrasenia)
         if type(find) == tuple:
             self.view.iniciar_sesion(correo)
-            return True
+            return find
         else:
             self.view.error(find)
-            return False
+            return find
 
     """
     **************************
@@ -129,30 +129,203 @@ class Controller:
 
     def main_menu_admin(self):
         sesion = self.in_sesion_admin()
-        if sesion == True:
+        if type(sesion) == tuple:
             o = '100'
             while o != '0':
-                self.view.main_menu_user()
-                self.view.option('3')
+                self.view.main_menu_admin()
+                self.view.option('6')
                 o = input()
                 if o == '1':
                     self.main_menu_movie_db()
                 elif o == '2':
-                    self.view.end_sesion()
+                    self.sala_menu()
                 elif o == '3':
-                    self.view.end_sesion()
+                    self.horario_menu()
                 elif o == '4':
-                    self.view.end_sesion()
+                    self.asientos_menu()
                 elif o == '5':
-                    self.view.end_sesion()
+                    self.funcion_menu()
                 elif o == '6':
-                    self.view.end_sesion()
+                    self.administrador_menu()
                 elif o == '0':
                     self.view.end_sesion()
                 else:
                     self.view.not_valid_option()
         else:
-            self.view.not_valid_option()
+            self.view.error_sesion(sesion)
+        return
+
+    def administrador_menu(self):
+        o = '100'
+        while o != '0':
+            self.view.administrador_menu()
+            self.view.option('7')
+            o = input()
+            if o == '1':
+                self.create_administrador()
+            elif o == '2':
+                self.read_a_administrador()
+            elif o == '3':
+                self.read_all_administrador()
+            elif o == '4':
+                self.read_administrador_correo()
+            elif o == '5':
+                self.read_administrador_nombre_completo()
+            elif o == '6':
+                self.update_administrador()
+            elif o == '7':
+                self.delete_administrador()
+            elif o == '0':
+                return
+            else:
+                self.view.not_valid_option()
+        return
+
+    def ask_administrador(self):
+        self.view.ask('Nombre: ')
+        nombre = input()
+        self.view.ask('Primer apellido: ')
+        apellido_1 = input()
+        self.view.ask('Segundo apellido: ')
+        apellido_2 = input()
+        self.view.ask('Correo: ')
+        correo = input()
+        self.view.ask('Telefono: ')
+        telefono = input()
+        self.view.ask('Contrasenia: ')
+        contrasenia = input()
+        return [nombre, apellido_1, apellido_2, correo, telefono, contrasenia]
+
+    def create_administrador(self):
+        nombre, apellido_1, apellido_2, correo, telefono, contrasenia = self.ask_administrador()
+        out = self.model.create_administrador(
+            nombre, apellido_1, apellido_2, correo, telefono, contrasenia)
+        if type(out) == int:
+            self.view.ok(nombre+'|'+correo, 'agrego')
+        else:
+            if out.errno == 1062:
+                self.view.error('EL ASMINISTRADOR ESTA REPETIDO')
+            else:
+                self.view.error('NO SE PUDO AGREGAR EL ADMINISTRADOR. REVISA')
+        return
+
+    def read_a_administrador(self):
+        self.view.ask('ID del administrador: ')
+        id_administrador = input()
+        administrador = self.model.read_a_administrador(id_administrador)
+        if type(administrador) == tuple:
+            self.view.show_administrador_header(
+                ' Datos del Administrador '+id_administrador+' ')
+            self.view.show_a_administrador(administrador)
+            self.view.show_administrador_midder()
+            self.view.show_administrador_footer()
+        else:
+            if administrador == None:
+                self.view.error('ADMINISTRADOR NO EXISTE')
+            else:
+                self.view.error('PROBLEMA AL LEER EL ADMINISTRADOR. REVISA')
+        return
+
+    def read_all_administrador(self):
+        administradores = self.model.read_all_administrador()
+        if type(administradores) == list:
+            self.view.show_administrador_header(' Todos los Administradores ')
+            for administrador in administradores:
+                self.view.show_a_administrador(administrador)
+            self.view.show_administrador_midder()
+            self.view.show_administrador_footer()
+        else:
+            self.view.error('PROBLEMA AL LEER LOS ADMINISTRADORES. REVISA')
+        return
+
+    def read_administrador_correo(self):
+        self.view.ask('Correo: ')
+        correo = input()
+        administrador = self.model.read_administrador_correo(
+            correo)
+        if type(administrador) == tuple:
+            self.view.show_administrador_header(' Datos del Administrador ')
+            self.view.show_a_administrador(administrador)
+            self.view.show_administrador_midder()
+            self.view.show_administrador_footer()
+        else:
+            self.view.error('PROBLEMA AL LEER EL ADMINISTRADOR. REVISA')
+        return
+
+    def read_administrador_nombre_completo(self):
+        self.view.ask('Nombre: ')
+        nombre = input()
+        self.view.ask('Primer apellido: ')
+        apellido_1 = input()
+        self.view.ask('Segundo apellido: ')
+        apellido_2 = input()
+        administradores = self.model.read_administrador_nombre_completo(
+            nombre, apellido_1, apellido_2)
+        if type(administradores) == list:
+            self.view.show_administrador_header(' Administradores con el nombre '+ nombre+' '+apellido_1+' '+apellido_2+' ')
+            for administrador in administradores:
+                self.view.show_a_administrador(administrador)
+                self.view.show_administrador_midder()
+                self.view.show_administrador_footer()
+        else:
+            self.view.error('PROBLEMA AL LEER LOS ADMINISTRADORES. REVISA')
+        return
+
+    def update_administrador(self):
+        self.view.ask('ID del administrador: ')
+        id_administrador = input()
+        administrador = self.model.read_a_administrador(id_administrador)
+        if type(administrador) == tuple:
+            self.view.show_administrador_header(' Datos del administrador '+id_administrador+' ')
+            self.view.show_a_administrador(administrador)
+            self.view.show_administrador_midder()
+            self.view.show_administrador_footer()
+        else:
+            if administrador == None:
+                self.view.error('EL ADMINISTRADOR NO EXISTE')
+            else:
+                self.view.error('PROBLEMA AL LEER EL ADMINISTRADOR. REVISA')
+            return
+        self.view.msg(
+            'Ingresa los valores a modificar (vacio para dejarlo igual):')
+        self.view.ask('Nombre: ')
+        nombre=input()
+        self.view.ask('Primer apellido: ')
+        apellido_1=input()
+        self.view.ask('Segundo apellido: ')
+        apellido_2=input()
+        self.view.ask('Correo: ')
+        correo=input()
+        self.view.ask('Telefono: ')
+        telefono=input()
+        self.view.ask('Contrasenia: ')
+        contrasenia=input()
+        whole_vals = [nombre, apellido_1, apellido_2, correo, telefono, contrasenia]
+        fields, vals = self.update_list(
+            ['nombre', 'apellido_1', 'apellido_2', 'correo', 'telefono', 'contrasenia'], whole_vals)
+        vals.append(id_administrador)
+        vals = tuple(vals)
+        out = self.model.update_administrador(fields, vals)
+        if out == True:
+            self.view.ok(id_administrador, 'actualizo')
+        else:
+            self.view.error('NO SE PUDO ACTUALIZAR EL ADMINISTRADOR. REVISA')
+        return
+
+    def delete_administrador(self):
+        self.view.ask('ID del administrador: ')
+        id_administrador = input()
+        if id_administrador == '1':
+            self.view.error('NO SE PUEDE BORRAR EL ADMINISTRADOR PRINCIPAL')
+            return
+        count = self.model.delete_administrador(id_administrador)
+        if count != 0:
+            self.view.ok(id_administrador, 'borro')
+        else:
+            if count == 0:
+                self.view.error('EL ADMINISTRADOR NO EXISTE')
+            else:
+                self.view.error('PROBLEMA AL BORRAR EL ADMINISTRADOR. REVISA')
         return
 
     def in_sesion_admin(self):
@@ -160,10 +333,629 @@ class Controller:
         find = self.model.read_administrador_sesion(correo, contrasenia)
         if type(find) == tuple:
             self.view.iniciar_sesion(correo)
-            return True
+            return find
         else:
             self.view.error(find)
-            return False
+            return find
+
+    """
+    ****************************
+    * Controllers for schedule *
+    ****************************
+    """
+
+    def horario_menu(self):
+        o = '100'
+        while o != '0':
+            self.view.horario_menu()
+            self.view.option('7')
+            o = input()
+            if o == '1':
+                self.create_horario()
+            elif o == '2':
+                self.read_a_horario()
+            elif o == '3':
+                self.read_all_horario()
+            elif o == '4':
+                self.read_horario_particular()
+            elif o == '5':
+                self.read_horario_fecha()
+            elif o == '6':
+                self.update_horario()
+            elif o == '7':
+                self.delete_pais()
+            elif o == '0':
+                return
+            else:
+                self.view.not_valid_option()
+        return
+
+    def ask_horario(self):
+        self.view.ask('Fecha: ')
+        fecha = input()
+        self.view.ask('Hora de inicio: ')
+        hora_inicio = input()
+        return [fecha, hora_inicio]
+
+    def create_horario(self):
+        fecha, hora_inicio = self.ask_horario()
+        out = self.model.create_horario(fecha, hora_inicio)
+        if type(out) == int:
+            self.view.ok(fecha+'a las'+hora_inicio, 'agrego')
+        else:
+            if out.errno == 1062:
+                self.view.error('EL HORARIO ESTA REPETIDO')
+            else:
+                self.view.error('NO SE PUDO AGREGAR EL HORARIO. REVISA')
+        return
+
+    def read_a_horario(self):
+        self.view.ask('ID del horario: ')
+        id_horario = input()
+        horario = self.model.read_a_horario(id_horario)
+        if type(horario) == tuple:
+            self.view.show_horario_header(' Datos del Horario '+id_horario+' ')
+            self.view.show_a_horario(horario)
+            self.view.show_horario_midder()
+            self.view.show_horario_footer()
+        else:
+            if horario == None:
+                self.view.error('HORARIO NO EXISTE')
+            else:
+                self.view.error('PROBLEMA AL LEER EL HORARIO. REVISA')
+        return
+
+    def read_all_horario(self):
+        horarios = self.model.read_all_horario()
+        if type(horarios) == list:
+            self.view.show_horario_header(' Todos los Horarios ')
+            for horario in horarios:
+                self.view.show_a_horario(horario)
+            self.view.show_horario_midder()
+            self.view.show_horario_footer()
+        else:
+            self.view.error('PROBLEMA AL LEER LOS HORARIOS. REVISA')
+        return
+
+    def read_horario_particular(self):
+        fecha, hora_inicio = self.ask_horario()
+        horario_part = self.model.read_horario_particular(fecha, hora_inicio)
+        if type(horario_part) == tuple:
+            self.view.show_horario_header(' Datos del Horario ')
+            self.view.show_a_horario(horario_part)
+            self.view.show_horario_midder()
+            self.view.show_horario_footer()
+        else:
+            self.view.error('PROBLEMA AL LEER EL HORARIO. REVISA')
+        return
+
+    def read_horario_fecha(self):
+        self.view.ask('Fecha: ')
+        fecha = input()
+        horarios = self.model.read_horario_particular(fecha)
+        if type(horarios) == list:
+            self.view.show_horario_header(' Horarios con la fecha '+fecha+' ')
+            for horario in horarios:
+                self.view.show_a_horario(horario)
+            self.view.show_horario_midder()
+            self.view.show_horario_footer()
+        else:
+            self.view.error('PROBLEMA AL LEER LOS HORARIOS. REVISA')
+        return
+
+    def update_horario(self):
+        self.view.ask('ID del horario: ')
+        id_horario = input()
+        horario = self.model.read_a_horario(id_horario)
+        if type(horario) == tuple:
+            self.view.show_horario_header(' Datos del horario '+id_horario+' ')
+            self.view.show_a_horario(horario)
+            self.view.show_horario_midder()
+            self.view.show_horario_footer()
+        else:
+            if horario == None:
+                self.view.error('EL HORARIO NO EXISTE')
+            else:
+                self.view.error('PROBLEMA AL LEER EL HORARIO. REVISA')
+            return
+        self.view.msg(
+            'Ingresa los valores a modificar (vacio para dejarlo igual):')
+        self.view.ask('Fecha: ')
+        fecha = input()
+        self.view.ask('Hora de inicio: ')
+        hora_inicio = input()
+        whole_vals = [fecha, hora_inicio]
+        fields, vals = self.update_list(
+            ['fecha', 'hora_inicio'], whole_vals)
+        vals.append(id_horario)
+        vals = tuple(vals)
+        out = self.model.update_horario(fields, vals)
+        if out == True:
+            self.view.ok(id_horario, 'actualizo')
+        else:
+            self.view.error('NO SE PUDO ACTUALIZAR EL HORARIO. REVISA')
+        return
+
+    def delete_horario(self):
+        self.view.ask('ID del horario: ')
+        id_horario = input()
+        count = self.model.delete_horario(id_horario)
+        if count != 0:
+            self.view.ok(id_horario, 'borro')
+        else:
+            if count == 0:
+                self.view.error('EL HORARIO NO EXISTE')
+            else:
+                self.view.error('PROBLEMA AL BORRAR EL HORARIO. REVISA')
+        return
+
+    """
+    **************************
+    * Controllers for saloon *
+    **************************
+    """
+
+    def sala_menu(self):
+        o = '100'
+        while o != '0':
+            self.view.sala_menu()
+            self.view.option('7')
+            o = input()
+            if o == '1':
+                self.create_sala()
+            elif o == '2':
+                self.read_a_sala()
+            elif o == '3':
+                self.read_all_sala()
+            elif o == '4':
+                self.read_sala_nombre()
+            elif o == '5':
+                self.read_sala_tipo()
+            elif o == '6':
+                self.update_sala()
+            elif o == '7':
+                self.delete_sala()
+            elif o == '0':
+                return
+            else:
+                self.view.not_valid_option()
+        return
+
+    def ask_sala(self):
+        self.view.ask('Nombre: ')
+        nombre = input()
+        self.view.ask('Escribe tipo (Normal|3D|IMAX|VIP): ')
+        tipo = input()
+        self.view.ask('Capacidad: ')
+        capacidad = input()
+        self.view.ask('Precio: ')
+        precio = input()
+        return [nombre, tipo, capacidad, precio]
+
+    def create_sala(self):
+        nombre, tipo, capacidad, precio = self.ask_sala()
+        out = self.model.create_sala(nombre, tipo, capacidad, precio)
+        if type(out) == int:
+            self.view.ok(nombre, 'agrego')
+        else:
+            if out.errno == 1062:
+                self.view.error('LA SALA ESTA REPETIDA')
+            else:
+                self.view.error('NO SE PUDO AGREGAR LA SALA. REVISA')
+        return
+
+    def read_a_sala(self):
+        self.view.ask('ID del sala: ')
+        id_sala = input()
+        sala = self.model.read_a_sala(id_sala)
+        if type(sala) == tuple:
+            self.view.show_sala_header(' Datos de la Sala '+id_sala+' ')
+            self.view.show_a_sala(sala)
+            self.view.show_sala_midder()
+            self.view.show_sala_footer()
+        else:
+            if sala == None:
+                self.view.error('SALA NO EXISTE')
+            else:
+                self.view.error('PROBLEMA AL LEER LA SALA. REVISA')
+        return
+
+    def read_all_sala(self):
+        salas = self.model.read_all_sala()
+        if type(salas) == list:
+            self.view.show_sala_header(' Todas las Salas ')
+            for sala in salas:
+                self.view.show_a_sala(sala)
+            self.view.show_sala_midder()
+            self.view.show_sala_footer()
+        else:
+            self.view.error('PROBLEMA AL LEER LAS SALAS. REVISA')
+        return
+
+    def read_sala_nombre(self):
+        self.view.ask('Nombre: ')
+        nombre = input()
+        salas = self.model.read_sala_nombre(nombre)
+        if type(salas) == list:
+            self.view.show_sala_header(' Salas con el nombre '+nombre+' ')
+            for sala in salas:
+                self.view.show_a_sala(sala)
+            self.view.show_sala_midder()
+            self.view.show_sala_footer()
+        else:
+            self.view.error('PROBLEMA AL LEER LAS SALAS. REVISA')
+        return
+
+    def read_sala_tipo(self):
+        self.view.ask('Escribe tipo (Normal|3D|IMAX|VIP): ')
+        tipo = input()
+        salas = self.model.read_sala_tipo(tipo)
+        if type(salas) == list:
+            self.view.show_sala_header(' Salas del tipo '+tipo+' ')
+            for sala in salas:
+                self.view.show_a_sala(sala)
+            self.view.show_sala_midder()
+            self.view.show_sala_footer()
+        else:
+            self.view.error('PROBLEMA AL LEER LOS HORARIOS. REVISA')
+        return
+
+    def update_sala(self):
+        self.view.ask('ID de la sala: ')
+        id_sala = input()
+        sala = self.model.read_a_sala(id_sala)
+        if type(sala) == tuple:
+            self.view.show_sala_header(' Datos de la Sala '+id_sala+' ')
+            self.view.show_a_sala(sala)
+            self.view.show_sala_midder()
+            self.view.show_sala_footer()
+        else:
+            if sala == None:
+                self.view.error('LA SALA NO EXISTE')
+            else:
+                self.view.error('PROBLEMA AL LEER LA SALA. REVISA')
+            return
+        self.view.msg(
+            'Ingresa los valores a modificar (vacio para dejarlo igual):')
+        self.view.ask('Nombre: ')
+        nombre = input()
+        self.view.ask('Escribe tipo (Normal|3D|IMAX|VIP): ')
+        tipo = input()
+        self.view.ask('Capacidad: ')
+        capacidad = input()
+        self.view.ask('Precio: ')
+        precio = input()
+        whole_vals = [nombre, tipo, capacidad, precio]
+        fields, vals = self.update_list(
+            ['nombre', 'tipo', 'capacidad', 'precio'], whole_vals)
+        vals.append(id_sala)
+        vals = tuple(vals)
+        out = self.model.update_sala(fields, vals)
+        if out == True:
+            self.view.ok(id_sala, 'actualizo')
+        else:
+            self.view.error('NO SE PUDO ACTUALIZAR LA SALA. REVISA')
+        return
+
+    def delete_sala(self):
+        self.view.ask('ID del sala: ')
+        id_sala = input()
+        count = self.model.delete_sala(id_sala)
+        if count != 0:
+            self.view.ok(id_sala, 'borro')
+        else:
+            if count == 0:
+                self.view.error('LA SALA NO EXISTE')
+            else:
+                self.view.error('PROBLEMA AL BORRAR LA SALA. REVISA')
+        return
+
+    """
+    ************************
+    * Controllers for seat *
+    ************************
+    """
+
+    def asientos_menu(self):
+        o = '100'
+        while o != '0':
+            self.view.asientos_menu()
+            self.view.option('7')
+            o = input()
+            if o == '1':
+                self.create_horario()
+            elif o == '2':
+                self.read_a_horario()
+            elif o == '3':
+                self.read_all_horario()
+            elif o == '4':
+                self.read_horario_particular()
+            elif o == '5':
+                self.read_horario_fecha()
+            elif o == '6':
+                self.update_horario()
+            elif o == '7':
+                self.delete_pais()
+            elif o == '0':
+                return
+            else:
+                self.view.not_valid_option()
+        return
+
+    def ask_asientos(self):
+        self.view.ask('Fila: ')
+        fila = input()
+        self.view.ask('Numero: ')
+        numero = input()
+        self.view.ask('Ocupado (1-SI|0-NO): ')
+        ocupado = input()
+        self.view.ask('ID sala: ')
+        id_sala = input()
+        return [fila, numero, ocupado, id_sala]
+
+    def create_asientos(self):
+        fila, numero, ocupado, id_sala = self.ask_asientos()
+        out = self.model.create_asientos(fila, numero, ocupado, id_sala)
+        if type(out) == int:
+            self.view.ok(fila+''+numero, 'agrego')
+        else:
+            if out.errno == 1062:
+                self.view.error('EL ASIENTO ESTA REPETIDO')
+            else:
+                self.view.error('NO SE PUDO AGREGAR EL ASIENTO. REVISA')
+        return
+
+    def read_a_asientos(self):
+        self.view.ask('ID del asiento: ')
+        id_asientos = input()
+        asientos = self.model.read_a_asientos(id_asientos)
+        if type(asientos) == tuple:
+            self.view.show_asientos_header(' Datos del Asiento '+id_asientos+' ')
+            self.view.show_a_asientos(asientos)
+            self.view.show_asientos_midder()
+            self.view.show_asientos_footer()
+        else:
+            if asientos == None:
+                self.view.error('EL ASIENTO NO EXISTE')
+            else:
+                self.view.error('PROBLEMA AL LEER EL ASIENTO. REVISA')
+        return
+
+    def read_all_asientos(self):
+        asientos = self.model.read_all_asientos()
+        if type(asientos) == list:
+            self.view.show_asientos_header(' Todos los Asientos ')
+            for asiento in asientos:
+                self.view.show_a_asientos(asiento)
+            self.view.show_asientos_midder()
+            self.view.show_asientos_footer()
+        else:
+            self.view.error('PROBLEMA AL LEER LOS ASIENTOS. REVISA')
+        return
+
+    def read_asientos_particulares(self):
+        self.view.ask('Fila: ')
+        fila = input()
+        self.view.ask('Numero: ')
+        numero = input()
+        asientos = self.model.read_asientos_particulares(
+            fila, numero)
+        if type(asientos) == list:
+            self.view.show_horario_header(
+                ' Asientos con la fila '+fila+' y numero '+numero+' ')
+            for asiento in asientos:
+                self.view.show_a_asientos(asiento)
+            self.view.show_asientos_midder()
+            self.view.show_asientos_footer()
+        else:
+            self.view.error('PROBLEMA AL LEER LOS ASIENTOS. REVISA')
+        return
+
+    def read_asientos_sala(self):
+        self.view.ask('ID sala: ')
+        id_sala = input()
+        asientos = self.model.read_asientos_sala(id_sala)
+        if type(asientos) == list:
+            self.view.show_asientos_header(' Asientos de la sala '+id_sala+' ')
+            for asiento in asientos:
+                self.view.show_a_asientos(asiento)
+            self.view.show_asientos_midder()
+            self.view.show_asientos_footer()
+        else:
+            self.view.error('PROBLEMA AL LEER LOS ASIENTOS. REVISA')
+        return
+
+    def update_asientos(self):
+        self.view.ask('ID del asiento: ')
+        id_asientos = input()
+        asientos = self.model.read_a_asientos(id_asientos)
+        if type(asientos) == tuple:
+            self.view.show_asientos_header(
+                ' Datos del asiento '+id_asientos+' ')
+            self.view.show_a_asientos(asientos)
+            self.view.show_asientos_midder()
+            self.view.show_asientos_footer()
+        else:
+            if asientos == None:
+                self.view.error('EL ASIENTO NO EXISTE')
+            else:
+                self.view.error('PROBLEMA AL LEER EL ASIENTO. REVISA')
+            return
+        self.view.msg(
+            'Ingresa los valores a modificar (vacio para dejarlo igual):')
+        self.view.ask('Fila: ')
+        fila = input()
+        self.view.ask('Numero: ')
+        numero = input()
+        self.view.ask('Ocupado (1-SI|0-NO): ')
+        ocupado = input()
+        self.view.ask('ID sala: ')
+        id_sala = input()
+        whole_vals = [fila, numero, ocupado, id_sala]
+        fields, vals = self.update_list(
+            ['fila', 'numero', 'ocupado', 'id_sala'], whole_vals)
+        vals.append(id_asientos)
+        vals = tuple(vals)
+        out = self.model.update_asientos(fields, vals)
+        if out == True:
+            self.view.ok(id_asientos, 'actualizo')
+        else:
+            self.view.error('NO SE PUDO ACTUALIZAR EL ASIENTO. REVISA')
+        return
+
+    def delete_asientos(self):
+        self.view.ask('ID del asiento: ')
+        id_asientos = input()
+        count = self.model.delete_asientos(id_asientos)
+        if count != 0:
+            self.view.ok(id_asientos, 'borro')
+        else:
+            if count == 0:
+                self.view.error('EL ASIENTO NO EXISTE')
+            else:
+                self.view.error('PROBLEMA AL BORRAR EL ASIENTO. REVISA')
+        return
+
+    """
+    ***********************************
+    * Controllers for cinema function *
+    ***********************************
+    """
+
+    def funcion_menu(self):
+        o = '100'
+        while o != '0':
+            self.view.funcion_menu()
+            self.view.option('10')
+            o = input()
+            if o == '1':
+                self.read_all_peliculas()
+            elif o == '2':
+                self.read_all_horario()
+            elif o == '3':
+                self.read_all_sala()
+            elif o == '4':
+                self.create_funcion()
+            elif o == '5':
+                self.read_a_funcion()
+            elif o == '6':
+                self.read_all_funcion()
+            elif o == '7':
+                self.read_funcion_pelicula()
+            elif o == '8':
+                self.read_funcion_horario()
+            elif o == '9':
+                self.read_funcion_sala()
+            elif o == '10':
+                self.delete_funcion()
+            elif o == '0':
+                return
+            else:
+                self.view.not_valid_option()
+        return
+
+    def ask_funcion(self):
+        self.view.ask('ID sala: ')
+        id_sala = input()
+        self.view.ask('ID horario: ')
+        id_horario = input()
+        self.view.ask('ID pelicula: ')
+        id_pelicula = input()
+        return [id_sala, id_horario, id_pelicula]
+
+    def create_funcion(self):
+        id_sala, id_horario, id_pelicula = self.ask_funcion()
+        out = self.model.create_funcion(id_sala, id_horario, id_pelicula)
+        if type(out) == int:
+            self.view.ok(id_sala+' '+id_horario+' '+id_pelicula, 'agrego')
+        else:
+            if out.errno == 1062:
+                self.view.error('LA FUNCION ESTA REPETIDA')
+            else:
+                self.view.error('NO SE PUDO AGREGAR LA FUNCION. REVISA')
+        return
+
+    def read_a_funcion(self):
+        id_sala, id_horario, id_pelicula = self.ask_funcion()
+        funcion = self.model.read_a_funcion(id_sala, id_horario, id_pelicula)
+        if type(funcion) == tuple:
+            self.view.show_funcion_header(
+                ' Datos de la funcion '+id_sala+'|'+id_horario+'|'+id_pelicula+' ')
+            self.view.show_a_funcion(funcion)
+            self.view.show_funcion_midder()
+            self.view.show_funcion_footer()
+        else:
+            if funcion == None:
+                self.view.error('LA FUNCION NO EXISTE')
+            else:
+                self.view.error('PROBLEMA AL LEER LA FUNCION. REVISA')
+        return
+
+    def read_all_funcion(self):
+        funciones = self.model.read_all_funcion()
+        if type(funciones) == list:
+            self.view.show_funcion_header(' Todas las Funciones ')
+            for funcion in funciones:
+                self.view.show_a_funcion(funcion)
+            self.view.show_funcion_midder()
+            self.view.show_funcion_footer()
+        else:
+            self.view.error('PROBLEMA AL LEER LAS FUNCIONES. REVISA')
+        return
+
+    def read_funcion_pelicula(self):
+        self.view.ask('ID pelicula: ')
+        id_pelicula = input()
+        funciones = self.model.read_funcion_pelicula(id_pelicula)
+        if type(funciones) == list:
+            self.view.show_funcion_header(' Funciones de la peilicula '+id_pelicula+' ')
+            for funcion in funciones:
+                self.view.show_a_funcion(funcion)
+            self.view.show_funcion_midder()
+            self.view.show_funcion_footer()
+        else:
+            self.view.error('PROBLEMA AL LEER LAS FUNCIONES. REVISA')
+        return
+
+    def read_funcion_horario(self):
+        self.view.ask('ID horario: ')
+        id_horario = input()
+        funciones = self.model.read_funcion_horario(id_horario)
+        if type(funciones) == list:
+            self.view.show_funcion_header(' Funciones del horario '+id_horario+' ')
+            for funcion in funciones:
+                self.view.show_a_funcion(funcion)
+            self.view.show_funcion_midder()
+            self.view.show_funcion_footer()
+        else:
+            self.view.error('PROBLEMA AL LEER LAS FUNCIONES. REVISA')
+        return
+
+    def read_funcion_sala(self):
+        self.view.ask('ID sala: ')
+        id_sala = input()
+        funciones = self.model.read_funcion_sala(id_sala)
+        if type(funciones) == list:
+            self.view.show_funcion_header(' Funciones de la sala '+id_sala+' ')
+            for funcion in funciones:
+                self.view.show_a_funcion(funcion)
+            self.view.show_funcion_midder()
+            self.view.show_funcion_footer()
+        else:
+            self.view.error('PROBLEMA AL LEER LAS FUNCIONES. REVISA')
+        return
+
+    def delete_funcion(self):
+        id_sala, id_horario, id_pelicula = self.ask_funcion()
+        count = self.model.delete_funcion(id_sala, id_horario, id_pelicula)
+        if count != 0:
+            self.view.ok(id_sala+'|'+id_horario+'|'+id_pelicula, 'borro')
+        else:
+            if count == 0:
+                self.view.error('LA FUNCION NO EXISTE')
+            else:
+                self.view.error('PROBLEMA AL BORRAR LA FUNCION. REVISA')
+        return
 
     """
     ********************************
@@ -296,7 +1088,6 @@ class Controller:
         self.view.ask('Nombre: ')
         nombre = input()
         nombre = [nombre]
-        print(nombre)
         fields, vals = self.update_list(['nombre'], nombre)
         vals.append(id_pais)
         vals = tuple(vals)
