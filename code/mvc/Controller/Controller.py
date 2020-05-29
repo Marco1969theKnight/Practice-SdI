@@ -77,7 +77,9 @@ class Controller:
                 elif o == '3':
                     self.usuario_menu(sesion)
                 elif o == '4':
-                    self.view.end_sesion()
+                    self.comprar_boleto(sesion)
+                elif o == '5':
+                    self.read_boletos_usuario(sesion)
                 elif o == '0':
                     self.view.end_sesion()
                 else:
@@ -238,6 +240,61 @@ class Controller:
             else:
                 self.view.error('PROBLEMA AL BORRAR AL USUARIO. REVISA')
         return
+
+    """
+    ***************************
+    * Controllers for tickets *
+    ***************************
+    """
+
+    def comprar_boleto(self, usuario):
+        id_usuario = usuario[0]
+        self.view.ask('Clave de la funcion(S-H-P): ')
+        clave = input()
+        clave = clave.split('-')
+        print(clave)
+        id_sala = clave[0]
+        id_horario = clave[1]
+        id_pelicula = clave[2]
+        asientos = self.model.read_asientos_sala(id_sala)
+        if type(asientos) == list:
+            self.view.show_asientos_header(' Asientos de la sala '+id_sala+' ')
+            for asiento in asientos:
+                self.view.show_a_asientos(asiento)
+                self.view.show_asientos_midder()
+            self.view.show_asientos_footer()
+            self.view.ask('ID del asiento que quiere reservar: ')
+            id_asientos = input()
+            out = self.model.create_boletos(
+                id_usuario, id_asientos, id_pelicula, id_horario)
+            if type(out) == int:
+                self.view.ok(str(id_usuario)+'-'+str(id_asientos)+'-' +
+                             str(id_pelicula)+'-'+str(id_horario), 'agrego')
+            else:
+                if out.errno == 1062:
+                    self.view.error('EL BOLETO ESTA REPETIDO')
+                else:
+                    self.view.error('NO SE PUDO AGREGAR EL BOLETO. REVISA')
+                return
+        else:
+            self.view.error('PROBLEMA AL LEER LOS ASIENTOS. REVISA')
+        return
+
+    def read_boletos_usuario(self, usuario):
+        id_usuario = usuario[0]
+        boletos = self.model.read_boletos_usuario(id_usuario)
+        #print(boletos)
+        if type(boletos) == list:
+            self.view.show_boletos_header(
+                ' Todos los Boletos comprados por el usuario '+str(id_usuario)+' ')
+            for boleto in boletos:
+                self.view.show_a_boletos(boleto)
+                self.view.show_boletos_midder()
+            self.view.show_boletos_footer()
+        else:
+            self.view.error('PROBLEMA AL LEER LOS BOLETOS. REVISA')
+        return
+
 
     """
     **************************

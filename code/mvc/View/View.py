@@ -36,13 +36,16 @@ class View:
     """
 
     def main_menu_user(self):
-        print('=========================================')
-        print('=   --   Menu Principal Usuarios   --   =')
-        print('=========================================')
+        print('=====================================================')
+        print('=      --      Menu Principal Usuarios      --      =')
+        print('=====================================================')
+        print(' --- Recueda tomar nota de la clave de la funcion ---')
+        print(' --- Se pedira esa clave para reservar un boleto --- ')
         print('1. Consultar funciones por dia')
         print('2. Consultar funciones por pelicula')
         print('3. Ajustes de perfil')
-        print('4. comprar boleto')
+        print('4. Comprar boleto')
+        print('5. Mostrar todos los boletos comprados')
         print('0. Salir')
 
     """
@@ -76,6 +79,31 @@ class View:
 
     def show_usuario_footer(self):
         print('*'*65)
+
+    """
+    ********************
+    * Views for ticket *
+    ********************
+    """
+
+    def show_a_boletos(self, record):
+        print('ID Boleto: ', record[0])
+        print('ID Usuario: ', record[1])
+        print('Sala: '+record[2]+' '+str(record[3]))
+        print('Asietno: '+record[4]+str(record[5]))
+        print('Pelicula: '+record[6]+' '+str(record[7]))
+        print('A las: ', record[8])
+        print('Precio: ', record[9])
+
+    def show_boletos_header(self, header):
+        print(header.center(57, '*'))
+        print('-'*57)
+
+    def show_boletos_midder(self):
+        print('-'*57)
+
+    def show_boletos_footer(self):
+        print('*'*57)
 
     """
     ************************
@@ -262,13 +290,14 @@ class View:
         print('0. Regresar')
 
     def show_a_funcion(self, record):
-        print('ID Sala: ', record[0])
+        print('* Clave Funcion: '+str(record[0])+'-'+str(record[5])+'-'+str(record[8])+' *')
+        print(' Datos de la sala '+str(record[0])+' ')
         print('Nombre: ', record[1])
         print('Tipo: ', record[2])
         print('Capacidad: ', record[3])
         print('Precio: ', record[4])
-        print(f'{record[5]:<6}|{str(record[6]):<10}|{str(record[7]):<8}')
-        print('ID Pelicula: ', record[8])
+        print(' En el horario '+f'{record[5]:<6}|{str(record[6]):<10}|{str(record[7]):<8}')
+        print(' Datos de la pelicula '+str(record[8])+' ')
         print('Titulo: ', record[9])
         print('Genero: ', record[10])
         print('Director: '+record[11]+' '+record[12])
