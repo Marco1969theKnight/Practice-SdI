@@ -140,6 +140,8 @@ create table if not exists boletos(
     id_boletos int not null auto_increment,
     id_usuario int not null,
     id_asientos int not null,
+    id_pelicula int not null,
+    id_horario int not null,
 
     primary key(id_boletos),
 
@@ -150,6 +152,16 @@ create table if not exists boletos(
 
     constraint fk_b_asientos foreign key(id_asientos)
 		references asientos(id_asientos)
+        on delete cascade
+        on update cascade,
+    
+    constraint fk_b_pelicula foreign key(id_pelicula)
+		references pelicula(id_pelicula)
+        on delete cascade
+        on update cascade,
+
+    constraint fk_b_horario foreign key(id_horario)
+		references horario(id_horario)
         on delete cascade
         on update cascade
 );

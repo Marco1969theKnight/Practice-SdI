@@ -46,6 +46,38 @@ class View:
         print('0. Salir')
 
     """
+    *******************
+    * Views for users *
+    *******************
+    """
+
+    def usuario_menu(self):
+        print('******************************************')
+        print('*     --     Submenu Usuarios     --     *')
+        print('******************************************')
+        print('1. Ver perfil')
+        print('2. Modificar perfil')
+        print('3. Eliminar perfil')
+        print('0. Salir')
+
+    def show_a_usuario(self, record):
+        print('ID: ', record[0])
+        print('Nombre: ', record[1])
+        print('Apellido: ', record[2])
+        print('Correo: ', record[3])
+        print('Contrasenia: ', record[4])
+
+    def show_usuario_header(self, header):
+        print(header.center(65, '*'))
+        print('-'*65)
+
+    def show_usuario_midder(self):
+        print('-'*65)
+
+    def show_usuario_footer(self):
+        print('*'*65)
+
+    """
     ************************
     * Views for admin menu *
     ************************

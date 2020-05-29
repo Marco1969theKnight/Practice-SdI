@@ -456,7 +456,7 @@ class Model:
 
     def read_a_funcion(self, id_sala, id_horario, id_pelicula):
         try:
-            sql = 'SELECT sala.*, horario.*, peliculas.id_pelicula, peliculas.titulo, genero.nombre, directores.nombre, directores.apellido, peliculas.anio, pais.nombre, peliculas.calif FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN peliculas ON funcion.id_pelicula = peliculas.id_pelicula JOIN genero ON peliculas.id_genero = genero.id_genero JOIN pais ON peliculas.id_pais = pais.id_pais JOIN directores ON peliculas.id_director = directores.id_director WHERE funcion.id_sala = %s AND funcion.id_horario = %s AND funcion.id_pelicula = %s'
+            sql = 'SELECT sala.*, horario.*, peliculas.id_pelicula, peliculas.titulo, genero.nombre, directores.nombre, directores.apellido, peliculas.anio, pais.nombre, peliculas.calif FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN peliculas ON funcion.id_pelicula = peliculas.id_pelicula JOIN genero ON peliculas.id_genero = genero.id_genero LEFT JOIN pais ON peliculas.id_pais = pais.id_pais JOIN directores ON peliculas.id_director = directores.id_director WHERE funcion.id_sala = %s AND funcion.id_horario = %s AND funcion.id_pelicula = %s'
             vals = (id_sala, id_horario, id_pelicula)
             self.cursor.execute(sql, vals)
             record = self.cursor.fetchone()
@@ -466,7 +466,7 @@ class Model:
 
     def read_funcion_sala(self, id_sala):
         try:
-            sql = 'SELECT sala.*, horario.*, peliculas.id_pelicula, peliculas.titulo, genero.nombre, directores.nombre, directores.apellido, peliculas.anio, pais.nombre, peliculas.calif FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN peliculas ON funcion.id_pelicula = peliculas.id_pelicula JOIN genero ON peliculas.id_genero = genero.id_genero JOIN pais ON peliculas.id_pais = pais.id_pais JOIN directores ON peliculas.id_director = directores.id_director WHERE funcion.id_sala = %s'
+            sql = 'SELECT sala.*, horario.*, peliculas.id_pelicula, peliculas.titulo, genero.nombre, directores.nombre, directores.apellido, peliculas.anio, pais.nombre, peliculas.calif FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN peliculas ON funcion.id_pelicula = peliculas.id_pelicula JOIN genero ON peliculas.id_genero = genero.id_genero LEFT JOIN pais ON peliculas.id_pais = pais.id_pais JOIN directores ON peliculas.id_director = directores.id_director WHERE funcion.id_sala = %s'
             vals = (id_sala,)
             self.cursor.execute(sql, vals)
             records = self.cursor.fetchall()
@@ -476,8 +476,18 @@ class Model:
 
     def read_funcion_horario(self, id_horario):
         try:
-            sql = 'SELECT sala.*, horario.*, peliculas.id_pelicula, peliculas.titulo, genero.nombre, directores.nombre, directores.apellido, peliculas.anio, pais.nombre, peliculas.calif FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN peliculas ON funcion.id_pelicula = peliculas.id_pelicula JOIN genero ON peliculas.id_genero = genero.id_genero JOIN pais ON peliculas.id_pais = pais.id_pais JOIN directores ON peliculas.id_director = directores.id_director WHERE funcion.id_horario = %s'
+            sql = 'SELECT sala.*, horario.*, peliculas.id_pelicula, peliculas.titulo, genero.nombre, directores.nombre, directores.apellido, peliculas.anio, pais.nombre, peliculas.calif FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN peliculas ON funcion.id_pelicula = peliculas.id_pelicula JOIN genero ON peliculas.id_genero = genero.id_genero LEFT JOIN pais ON peliculas.id_pais = pais.id_pais JOIN directores ON peliculas.id_director = directores.id_director WHERE funcion.id_horario = %s'
             vals = (id_horario,)
+            self.cursor.execute(sql, vals)
+            records = self.cursor.fetchall()
+            return records
+        except connector.Error as err:
+            return err
+    
+    def read_funcion_fecha_horario(self, fecha):
+        try:
+            sql = 'SELECT sala.*, horario.*, peliculas.id_pelicula, peliculas.titulo, genero.nombre, directores.nombre, directores.apellido, peliculas.anio, pais.nombre, peliculas.calif FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN peliculas ON funcion.id_pelicula = peliculas.id_pelicula JOIN genero ON peliculas.id_genero = genero.id_genero LEFT JOIN pais ON peliculas.id_pais = pais.id_pais JOIN directores ON peliculas.id_director = directores.id_director WHERE horario.fecha = %s'
+            vals = (fecha,)
             self.cursor.execute(sql, vals)
             records = self.cursor.fetchall()
             return records
@@ -486,8 +496,18 @@ class Model:
 
     def read_funcion_pelicula(self, id_pelicula):
         try:
-            sql = 'SELECT sala.*, horario.*, peliculas.id_pelicula, peliculas.titulo, genero.nombre, directores.nombre, directores.apellido, peliculas.anio, pais.nombre, peliculas.calif FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN peliculas ON funcion.id_pelicula = peliculas.id_pelicula JOIN genero ON peliculas.id_genero = genero.id_genero JOIN pais ON peliculas.id_pais = pais.id_pais JOIN directores ON peliculas.id_director = directores.id_director WHERE funcion.id_pelicula = %s'
+            sql = 'SELECT sala.*, horario.*, peliculas.id_pelicula, peliculas.titulo, genero.nombre, directores.nombre, directores.apellido, peliculas.anio, pais.nombre, peliculas.calif FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN peliculas ON funcion.id_pelicula = peliculas.id_pelicula JOIN genero ON peliculas.id_genero = genero.id_genero LEFT JOIN pais ON peliculas.id_pais = pais.id_pais JOIN directores ON peliculas.id_director = directores.id_director WHERE funcion.id_pelicula = %s'
             vals = (id_pelicula,)
+            self.cursor.execute(sql, vals)
+            records = self.cursor.fetchall()
+            return records
+        except connector.Error as err:
+            return err
+
+    def read_funcion_pelicula_titulo(self, titulo):
+        try:
+            sql = 'SELECT sala.*, horario.*, peliculas.id_pelicula, peliculas.titulo, genero.nombre, directores.nombre, directores.apellido, peliculas.anio, pais.nombre, peliculas.calif FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN peliculas ON funcion.id_pelicula = peliculas.id_pelicula JOIN genero ON peliculas.id_genero = genero.id_genero LEFT JOIN pais ON peliculas.id_pais = pais.id_pais JOIN directores ON peliculas.id_director = directores.id_director WHERE peliculas.titulo = %s'
+            vals = (titulo,)
             self.cursor.execute(sql, vals)
             records = self.cursor.fetchall()
             return records
@@ -496,7 +516,7 @@ class Model:
 
     def read_all_funcion(self):    # Caution if large ammount of data
         try:
-            sql = 'SELECT sala.*, horario.*, peliculas.id_pelicula, peliculas.titulo, genero.nombre, directores.nombre, directores.apellido, peliculas.anio, pais.nombre, peliculas.calif FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN peliculas ON funcion.id_pelicula = peliculas.id_pelicula JOIN genero ON peliculas.id_genero = genero.id_genero JOIN pais ON peliculas.id_pais = pais.id_pais JOIN directores ON peliculas.id_director = directores.id_director'
+            sql = 'SELECT sala.*, horario.*, peliculas.id_pelicula, peliculas.titulo, genero.nombre, directores.nombre, directores.apellido, peliculas.anio, pais.nombre, peliculas.calif FROM funcion JOIN sala ON funcion.id_sala = sala.id_sala JOIN horario ON funcion.id_horario = horario.id_horario JOIN peliculas ON funcion.id_pelicula = peliculas.id_pelicula JOIN genero ON peliculas.id_genero = genero.id_genero LEFT JOIN pais ON peliculas.id_pais = pais.id_pais JOIN directores ON peliculas.id_director = directores.id_director'
             self.cursor.execute(sql)
             records = self.cursor.fetchall()
             return records
@@ -513,6 +533,34 @@ class Model:
             return count
         except connector.Error as err:
             self.cnx.rollback()
+            return err
+
+    """
+    ******************
+    * ticket methods *
+    ******************
+    """
+
+    def create_boletos(self, id_usuario, id_asientos, id_pelicula, id_horario):
+        try:
+            sql = 'INSERT INTO  boletos (`id_usuario`, `id_asientos`,  `id_pelicula`, `id_horario`) VALUES(%s, %s, %s, %s)'
+            vals = (id_usuario, id_asientos, id_pelicula, id_horario)
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            id_boletos = self.cursor.lastrowid
+            return id_boletos
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
+
+    def read_a_boletos(self, id_usuario, id_asientos, id_pelicula, id_horario):
+        try:
+            sql = 'SELECT boletos.id_boletos, id_boletos.id_usuario, sala.nombre, sala.tipo, asientos.fila, asientos.numero, peliculas.titulo, peliculas.anio, sala.precio FROM boletos JOIN asientos ON boletos.id_asientos = asientos.id_asientos JOIN horario ON funcion.id_horario = horario.id_horario JOIN peliculas ON funcion.id_pelicula = peliculas.id_pelicula JOIN genero ON peliculas.id_genero = genero.id_genero LEFT JOIN pais ON peliculas.id_pais = pais.id_pais JOIN directores ON peliculas.id_director = directores.id_director WHERE funcion.id_sala = %s AND funcion.id_horario = %s AND funcion.id_pelicula = %s'
+            vals = (id_usuario, id_asientos)
+            self.cursor.execute(sql, vals)
+            record = self.cursor.fetchone()
+            return record
+        except connector.Error as err:
             return err
 
     """

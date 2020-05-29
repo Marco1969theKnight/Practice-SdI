@@ -68,14 +68,14 @@ class Controller:
             o = '100'
             while o != '0':
                 self.view.main_menu_user()
-                self.view.option('3')
+                self.view.option('4')
                 o = input()
                 if o == '1':
-                    self.view.end_sesion()
+                    self.read_funcion_fecha_horario()
                 elif o == '2':
-                    self.view.end_sesion()
+                    self.read_funcion_pelicula_titulo()
                 elif o == '3':
-                    self.view.end_sesion()
+                    self.usuario_menu(sesion)
                 elif o == '4':
                     self.view.end_sesion()
                 elif o == '0':
@@ -111,6 +111,36 @@ class Controller:
                 self.view.error('NO SE PUDO DAR DE ALTA EL USUARIO. REVISA')
         return
 
+    def read_funcion_fecha_horario(self):
+        self.view.ask('Ingresa fecha (YYYY-MM-DD): ')
+        fecha = input()
+        funciones = self.model.read_funcion_fecha_horario(fecha)
+        if type(funciones) == list:
+            self.view.show_funcion_header(
+                ' Funciones para el dia '+fecha+' ')
+            for funcion in funciones:
+                self.view.show_a_funcion(funcion)
+                self.view.show_funcion_midder()
+            self.view.show_funcion_footer()
+        else:
+            self.view.error('PROBLEMA AL LEER LAS FUNCIONES. REVISA')
+        return
+
+    def read_funcion_pelicula_titulo(self):
+        self.view.ask('Ingresa el titulo de la pelicula: ')
+        titulo = input()
+        funciones = self.model.read_funcion_pelicula_titulo(titulo)
+        if type(funciones) == list:
+            self.view.show_funcion_header(
+                ' Funciones para la pelicula '+titulo+' ')
+            for funcion in funciones:
+                self.view.show_a_funcion(funcion)
+                self.view.show_funcion_midder()
+            self.view.show_funcion_footer()
+        else:
+            self.view.error('PROBLEMA AL LEER LAS FUNCIONES. REVISA')
+        return
+
     def in_sesion_usario(self):
         correo, contrasenia = self.ask_sesion()
         find = self.model.read_usuario_sesion(correo, contrasenia)
@@ -120,6 +150,94 @@ class Controller:
         else:
             self.view.error(find)
             return find
+
+    """
+    *************************
+    * Controllers for users *
+    *************************
+    """
+
+    def usuario_menu(self, usuario):
+        o = '100'
+        while o != '0':
+            self.view.usuario_menu()
+            self.view.option('3')
+            o = input()
+            if o == '1':
+                self.read_a_usuario(usuario)
+            elif o == '2':
+                self.update_usuario(usuario)
+            elif o == '3':
+                self.delete_usuario(usuario)
+                self.view.end_sesion()
+                return
+            elif o == '0':
+                self.view.end_sesion()
+            else:
+                self.view.not_valid_option()
+        return
+
+    def read_a_usuario(self, usuario):
+        id_usuario = usuario[0]
+        if type(usuario) == tuple:
+            self.view.show_usuario_header(
+                ' Datos del Usuario '+str(id_usuario)+' ')
+            self.view.show_a_usuario(usuario)
+            self.view.show_usuario_midder()
+            self.view.show_usuario_footer()
+        else:
+            if usuario == None:
+                self.view.error('USUARIO NO EXISTE')
+            else:
+                self.view.error('PROBLEMA AL LEER EL USUARIO. REVISA')
+        return
+
+    def update_usuario(self, usuario):
+        id_usuario = usuario[0]
+        if type(usuario) == tuple:
+            self.view.show_usuario_header(' Datos del usuario '+str(id_usuario)+' ')
+            self.view.show_a_usuario(usuario)
+            self.view.show_usuario_midder()
+            self.view.show_usuario_footer()
+        else:
+            if usuario == None:
+                self.view.error('EL USUARIO NO EXISTE')
+            else:
+                self.view.error('PROBLEMA AL LEER EL USUARIO. REVISA')
+            return
+        self.view.msg(
+            'Ingresa los valores a modificar (vacio para dejarlo igual):')
+        self.view.ask('Nombre: ')
+        nombre = input()
+        self.view.ask('Apellido: ')
+        apellido = input()
+        self.view.ask('correo: ')
+        correo = input()
+        self.view.ask('contraseña: ')
+        contrasenia = input()
+        whole_vals = [nombre, apellido, correo, contrasenia]
+        fields, vals = self.update_list(
+            ['nombre', 'apellido', 'correo', 'contrasenia'], whole_vals)
+        vals.append(id_usuario)
+        vals = tuple(vals)
+        out = self.model.update_usuario(fields, vals)
+        if out == True:
+            self.view.ok(id_usuario, 'actualizo')
+        else:
+            self.view.error('NO SE PUDO ACTUALIZAR EL USUARIO. REVISA')
+        return
+
+    def delete_usuario(self, usuario):
+        id_usuario = usuario[0]
+        count = self.model.delete_usuario(id_usuario)
+        if count != 0:
+            self.view.ok(str(id_usuario), 'borro')
+        else:
+            if count == 0:
+                self.view.error('EL USUARIO NO EXISTE')
+            else:
+                self.view.error('PROBLEMA AL BORRAR AL USUARIO. REVISA')
+        return
 
     """
     **************************
